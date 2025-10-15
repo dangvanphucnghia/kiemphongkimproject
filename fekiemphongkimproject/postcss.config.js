@@ -1,6 +1,6 @@
+// postcss.config.js  (ESM)
+import tailwind from '@tailwindcss/postcss'
+
 export default {
-  plugins: {
-    '@tailwindcss/postcss': {}, // 🟢 dùng plugin mới
-    autoprefixer: {},
-  },
-};
+  plugins: [tailwind],
+}

@@ -1,12 +1,60 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fekiemphongkimproject</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Wood & Wine – Đồ gỗ tự nhiên & Rượu vang tuyển chọn</title>
+    <meta name="description" content="Cửa hàng Wood & Wine: Bàn ghế gỗ tự nhiên, đồ decor và rượu vang/whisky tuyển chọn. Giao nhanh, quà biếu sang trọng, dịch vụ tư vấn tận tâm." />
+    <link rel="canonical" href="https://example.com/" />
+
+    <!-- OpenGraph / Twitter -->
+    <meta property="og:title" content="Wood & Wine – Đồ gỗ & Rượu" />
+    <meta property="og:description" content="Bàn ghế gỗ tự nhiên & rượu vang tuyển chọn. Ưu đãi mỗi tuần." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1509087855692-3e94e09db5f1?q=80&w=1200&auto=format&fit=crop" />
+    <meta property="og:url" content="https://example.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Performance hints -->
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <meta name="theme-color" content="#7A2F2F" />
+
+    <!-- JSON-LD: Organization + Website -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"Organization",
+      "name":"Wood & Wine",
+      "url":"https://example.com/",
+      "logo":"https://images.unsplash.com/photo-1524594227084-fb05b5263b3c?q=80&w=300&auto=format&fit=crop",
+      "sameAs":[]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"WebSite",
+      "url":"https://example.com/",
+      "potentialAction":{
+        "@type":"SearchAction",
+        "target":"https://example.com/search?q={query}",
+        "query-input":"required name=query"
+      }
+    }
+    </script>
+
+    <link rel="icon" href="/vite.svg" />
   </head>
-  <body>
+  <body class="font-[Inter] bg-[#FAF6F1]">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 bg-white text-[#2E2E2E] px-3 py-2 rounded shadow">
+      Bỏ qua nội dung
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
