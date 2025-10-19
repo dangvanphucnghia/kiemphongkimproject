@@ -1,30 +1,30 @@
 export default function HeaderBar() {
   return (
-    <div className="bg-[#EA1B25] text-white">
+    <div className="bg-[#F4E04D] text-[#2E2E2E]"> {/* Đổi từ đỏ sang vàng và chữ thành đen */}
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7f/WinMart_logo.svg"
-            alt="WinMart"
+            src="/images/logo.png"
+            alt="Kiếm Phong Kim"
             className="h-8"
           />
         </a>
 
         {/* Search */}
         <div className="flex-1">
-          <div className="flex items-center bg-white/95 rounded-full overflow-hidden">
-            <span className="pl-4 pr-2 text-gray-400">🔍</span>
+          <div className="flex items-center bg-white rounded-full overflow-hidden shadow-sm">
+            <span className="pl-4 pr-2 text-gray-500">🔍</span>
             <input
               className="h-10 w-full outline-none text-sm text-[#2E2E2E] placeholder:text-gray-400"
-              placeholder="Giao nhanh 2h, Giảm thêm 20% Rau WinEco & Thịt MeatDeli"
+              placeholder="Giao nhanh 2h, Giảm thêm 20% sản phẩm Trầm & Tinh Dầu Kiếm Phong Kim"
             />
           </div>
         </div>
 
         {/* Chi nhánh */}
         <button
-          className="hidden md:flex items-center gap-2 bg-white/95 text-[#EA1B25] rounded-full h-10 px-4 hover:bg-white"
+          className="hidden md:flex items-center gap-2 bg-white text-[#D4AF37] rounded-full h-10 px-4 hover:bg-[#FFF8E1]"
           aria-haspopup="listbox"
         >
           📍 <span className="font-semibold">Chi nhánh</span>

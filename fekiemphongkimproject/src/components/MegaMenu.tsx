@@ -1,108 +1,144 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-/** dữ liệu minh họa – bạn thay bằng API thực tế */
-const CATEGORIES = [
+interface SubItem {
+  name: string;
+  link: string;
+  subSubs?: { name: string; link: string }[];
+}
+
+interface Category {
+  name: string;
+  subs: SubItem[];
+  preview: string;
+}
+
+interface MegaMenuProps {
+  onClose?: () => void;
+}
+
+const CATEGORIES: Category[] = [
   {
-    name: "Giá Siêu Rẻ",
-    subs: ["Flash sale hôm nay", "Mua 1 tặng 1", "Combo tiết kiệm"],
-    preview:
-      "https://images.unsplash.com/photo-1580910051074-3eb694886505?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    name: "Ưu Đãi Hội Viên",
-    subs: ["Thành viên bạc", "Thành viên vàng", "Độc quyền app"],
-    preview:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    name: "Sữa các loại",
+    name: "Tượng Gỗ Tâm Linh – Phong Thủy",
     subs: [
-      "Sữa Tươi",
-      "Sữa Hạt - Sữa Đậu",
-      "Sữa Bột",
-      "Bơ Sữa - Phô Mai",
-      "Sữa đặc",
-      "Sữa Chua - Váng Sữa",
+      { name: "Tượng Di Lặc", link: "#" },
+      { name: "Phật Bà Quan Âm", link: "#" },
+      { name: "Phật Thích Ca", link: "#" },
+      { name: "Tượng Đạt Ma", link: "#" },
+      { name: "Tam Đa – Phúc Lộc Thọ", link: "#" },
+      { name: "Tỳ Hưu – Cóc Ngậm Tiền", link: "#" },
+      { name: "Nhận Khắc Tượng Theo Yêu Cầu", link: "#" },
     ],
-    preview:
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop",
+    preview: "/images/category2.png",
   },
   {
-    name: "Rau - Củ - Trái Cây",
-    subs: ["Rau lá", "Củ quả", "Trái cây nội địa", "Trái cây nhập khẩu"],
-    preview:
-      "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop",
+    name: "Trầm Hương – Tinh Hoa Thiên Nhiên",
+    subs: [
+      { name: "Trầm Cảnh – Trang Trí", link: "#" },
+      { name: "Vòng Tay Trầm Hương", link: "#" },
+      { name: "Nụ Trầm – Trầm Không Tăm", link: "#" },
+      { name: "Thác Khói Trầm Hương", link: "#" },
+      { name: "Trầm Đốt – Trầm Miếng", link: "#" },
+      { name: "Tinh Dầu Trầm Hương", link: "#" },
+    ],
+    preview: "/images/category1.png",
   },
   {
-    name: "Chăm Sóc Cá Nhân",
-    subs: ["Dầu gội", "Sữa tắm", "Chăm sóc răng miệng", "Khử mùi"],
-    preview:
-      "https://images.unsplash.com/photo-1505575972945-280fd494ee0d?q=80&w=800&auto=format&fit=crop",
+    name: "Tinh Dầu Truyền Thống",
+    subs: [
+      { name: "Tinh Dầu Tràm", link: "#" },
+      { name: "Tinh Dầu Bưởi", link: "#" },
+      { name: "Tinh Dầu Sả Chanh", link: "#" },
+      { name: "Tinh Dầu Sả Java", link: "#" },
+      { name: "Tinh Dầu Quế", link: "#" },
+    ],
+    preview: "/images/category2.png",
   },
-  // ... thêm các mục khác nếu muốn
+  {
+    name: "Thực Phẩm Tự Nhiên – Sức Khỏe Gia Đình",
+    subs: [
+      { name: "Mật Ong Rừng Nguyên Chất", link: "#" },
+      { name: "Bột Sắn Dây", link: "#" },
+      { name: "Tinh Bột Nghệ Vàng", link: "#" },
+      { name: "Yến Sào", link: "#" },
+    ],
+    preview: "/images/category3.png",
+  },
+  {
+    name: "Rượu Ngâm Truyền Thống",
+    subs: [
+      { name: "Rượu Chuối Hột Rừng", link: "#" },
+      { name: "Rượu Nếp Đục", link: "#" },
+      { name: "Rượu Nếp Non – Đòng Đòng", link: "#" },
+      { name: "Rượu Trái Cây Mix", link: "#" },
+      { name: "Rượu Ngô Bao Tử", link: "#" },
+    ],
+    preview: "/images/category1.png",
+  },
 ];
 
-export default function MegaMenu({ onClose }: { onClose: () => void }) {
-  const [active, setActive] = useState(2); // highlight "Sữa các loại" như ảnh
+export default function MegaMenu({ onClose }: MegaMenuProps) {
+  const [active, setActive] = useState<number>(0);
+  const [subActive, setSubActive] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
+      ref={menuRef}
+      className="relative"
       onMouseLeave={onClose}
-      className="absolute left-0 top-10 z-30 w-[980px]"
+      onClick={(e) => e.stopPropagation()}
     >
-      <div className="bg-white rounded-md shadow-2xl p-0 grid grid-cols-[260px_320px_1fr] overflow-hidden">
-        {/* Cột trái: danh mục chính */}
-        <nav aria-label="Danh mục chính" className="border-r bg-[#FAFAFA]">
-          <ul className="max-h-[460px] overflow-y-auto py-2">
-            {CATEGORIES.map((c, idx) => {
-              const activeCls =
-                idx === active
-                  ? "bg-white border-l-4 border-[#EA1B25] font-semibold"
-                  : "hover:bg-gray-100";
-              return (
-                <li key={c.name}>
-                  <button
-                    onMouseEnter={() => setActive(idx)}
-                    className={`w-full text-left px-4 py-2.5 flex items-center justify-between ${activeCls}`}
-                  >
-                    <span>{c.name}</span>
-                    <span className="opacity-60">›</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Cột giữa: danh mục con */}
-        <div className="px-4 py-3">
-          <h3 className="mb-2 font-semibold text-[#2E2E2E]">
-            {CATEGORIES[active].name}
-          </h3>
-          <ul className="space-y-2">
-            {CATEGORIES[active].subs.map((s) => (
-              <li key={s}>
-                <a
-                  href="#"
-                  className="block rounded px-2 py-2 hover:bg-gray-100"
+      <div className="bg-white rounded-md shadow-2xl w-[1080px] animate-fadeIn">
+        <div className="grid grid-cols-[260px_320px_1fr]">
+          {/* Cột trái */}
+          <ul className="border-r bg-[#FAFAFA] max-h-[480px] overflow-y-auto py-2">
+            {CATEGORIES.map((c, idx) => (
+              <li key={c.name}>
+                <button
+                  onMouseEnter={() => setActive(idx)}
+                  className={`w-full text-left px-4 py-2.5 flex items-center justify-between transition ${
+                    active === idx
+                      ? "bg-white border-l-4 border-[#F4E04D] font-semibold text-[#D4AF37]"
+                      : "hover:bg-gray-100"
+                  }`}
                 >
-                  {s}
-                </a>
+                  <span>{c.name}</span>
+                  <span className="opacity-50">›</span>
+                </button>
               </li>
             ))}
           </ul>
-        </div>
 
-        {/* Cột phải: ảnh tròn */}
-        <div className="flex items-center justify-center p-6">
-          <div className="h-80 w-80 rounded-full bg-[#F3F3F3] flex items-center justify-center">
-            <img
-              src={CATEGORIES[active].preview}
-              alt={CATEGORIES[active].name}
-              className="h-64 w-48 object-contain"
-              loading="lazy"
-              decoding="async"
-            />
+          {/* Cột giữa */}
+          <div className="px-4 py-3">
+            <h3 className="mb-2 font-semibold text-[#2E2E2E]">
+              {CATEGORIES[active].name}
+            </h3>
+            <ul className="space-y-1">
+              {CATEGORIES[active].subs.map((s, idx) => (
+                <li
+                  key={s.name}
+                  onMouseEnter={() => setSubActive(idx)}
+                  onMouseLeave={() => setSubActive(null)}
+                  className="relative"
+                >
+                  <a href={s.link} className="block px-2 py-2 hover:bg-gray-100">
+                    {s.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cột phải: ảnh minh hoạ */}
+          <div className="flex items-center justify-center p-6">
+            <div className="h-80 w-80 rounded-full bg-[#FFF8E1] flex items-center justify-center overflow-hidden">
+              <img
+                src={CATEGORIES[active].preview}
+                alt={CATEGORIES[active].name}
+                className="h-72 w-72 object-contain transition-transform duration-500 hover:scale-105"
+              />
+            </div>
           </div>
         </div>
       </div>
