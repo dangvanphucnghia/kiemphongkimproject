@@ -52,7 +52,7 @@ export default function Table({ columns, data, onRowClick }) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody> 
             {filtered.map((row) => (
               <tr
                 key={row.id}
