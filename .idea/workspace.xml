@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e3926f5c-36df-4848-bb5f-df628db57765" name="Changes" comment="setup project update by Nghia">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adminkiemphongkim/src/components/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/adminkiemphongkim/src/components/Layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adminkiemphongkim/src/components/Table.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/adminkiemphongkim/src/components/Table.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kiemphongkimproject.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +35,7 @@
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/dangvanphucnghia/kiemphongkimproject.git",
-    "accountId": "08349d8a-3406-4798-ac0c-e2225e7fd2cb"
+    "accountId": "a471dae7-e7b9-4b8b-8e7d-8aa996ecc54c"
   }
 }]]></component>
   <component name="ProjectColorInfo">{
