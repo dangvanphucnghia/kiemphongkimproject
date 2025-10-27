@@ -6,61 +6,67 @@ export default function Auth() {
   const [mode, setMode] = useState<"login" | "signup">("login");
 
   return (
-    <div className="grid h-screen w-full max-w-[1100px] mx-auto grid-cols-1 lg:grid-cols-2">
-      {/* LEFT - Ảnh giày và nút chuyển */}
-      <div className="relative hidden lg:flex items-center justify-center bg-gradient-to-b from-yellow-400 to-yellow-200 overflow-hidden">
-        <div className="relative w-[85%] max-w-[600px]">
-          {/* Nút chọn Login / Signup */}
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 flex gap-4">
-            <button
-              onClick={() => setMode("login")}
-              className={`uppercase font-extrabold text-gray-800 text-lg px-6 py-3 rounded-full transition ${
-                mode === "login"
-                  ? "bg-white/60 shadow-md"
-                  : "opacity-70 hover:opacity-100"
-              }`}
-            >
-              Đăng nhập
-            </button>
-            <button
-              onClick={() => setMode("signup")}
-              className={`uppercase font-extrabold text-gray-800 text-lg px-6 py-3 rounded-full transition ${
-                mode === "signup"
-                  ? "bg-white/60 shadow-md"
-                  : "opacity-70 hover:opacity-100"
-              }`}
-            >
-              Đăng ký
-            </button>
+    <div className="grid h-screen w-full max-w-[1200px] mx-auto grid-cols-1 lg:grid-cols-2 bg-gray-50 overflow-hidden">
+      {/* LEFT - Biển hiệu Kiếm Phong Kim */}
+      <header className="relative hidden lg:flex items-center justify-center bg-gradient-to-b from-yellow-300 via-yellow-400 to-yellow-200">
+        <div className="relative w-[90%] max-w-[620px] text-center select-none py-20 px-8 rounded-[32px] shadow-[0_0_80px_rgba(0,0,0,0.3)] border-[6px] border-yellow-500 bg-gradient-to-b from-yellow-300 to-yellow-100">
+          {/* Nút chuyển Login / Signup */}
+          <div className="absolute left-1/2 -top-6 -translate-x-1/2 flex gap-4">
+            {["login", "signup"].map((m) => (
+              <button
+                key={m}
+                onClick={() => setMode(m as "login" | "signup")}
+                className={`uppercase font-extrabold text-gray-800 text-lg px-6 py-3 rounded-full transition ${
+                  mode === m
+                    ? "bg-white/80 shadow-md"
+                    : "opacity-70 hover:opacity-100"
+                }`}
+              >
+                {m === "login" ? "Đăng nhập" : "Đăng ký"}
+              </button>
+            ))}
           </div>
 
-          {/* Ảnh giày (đặt ở public/images/shoe.png hoặc ảnh bạn muốn) */}
-          <img
-            src="/images/category1.png"
-            alt="Sneaker"
-            className="mt-24 w-full drop-shadow-[0_42px_40px_rgba(20,20,40,0.5)]"
-          />
+          {/* Hàng chính: đèn vàng bên trái + tên thương hiệu 1 hàng */}
+          <div className="flex items-center justify-center gap-5 mt-10">
+            {/* Đèn tròn bên trái */}
+            <div className="w-14 h-14 bg-yellow-400 rounded-full shadow-[0_0_40px_15px_rgba(255,230,0,0.8)] animate-pulse shrink-0"></div>
+
+            {/* Chữ chính 1 hàng */}
+            <h1 className="text-3xl font-extrabold text-white tracking-wider drop-shadow-[3px_4px_1px_rgba(20,20,80,0.9)] bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-100 to-blue-400">
+              KIẾM PHONG KIM
+            </h1>
+          </div>
+
+          {/* Dòng phụ */}
+          <div className="mt-8 space-y-3 text-xl font-extrabold text-[#0c2b7a]">
+            <p className="tracking-wide">MỘC MỸ NGHỆ – TRẦM HƯƠNG</p>
+            <p>ĐẶC SẢN TÂY BẮC – YẾN SÀO KHÁNH HÒA</p>
+            <p>TINH DẦU CHƯNG CẤT TRUYỀN THỐNG</p>
+          </div>
+
+          {/* Hiệu ứng ánh sáng chạy nhẹ */}
+          <div className="absolute inset-0 rounded-[32px] bg-gradient-to-tr from-transparent via-white/15 to-transparent animate-[shine_4s_linear_infinite]" />
         </div>
-      </div>
+      </header>
 
       {/* RIGHT - Form */}
-      <div className="flex flex-col justify-center gap-7 bg-white lg:rounded-l-[28px] p-8 md:p-14 shadow-[ -30px_0_80px_rgba(0,0,0,0.08)]">
-        {/* logo */}
+      <main className="flex flex-col justify-center gap-7 bg-white lg:rounded-l-[28px] p-8 md:p-14 shadow-[-30px_0_80px_rgba(0,0,0,0.08)]">
+        {/* Logo chữ */}
         <div className="flex items-center gap-3 mb-4">
-          <img
-            src="/images/logo.png"
-            alt="Logo"
-            className="h-10 w-auto object-contain"
-          />
-          <b className="text-[22px] text-yellow-600 tracking-wide">
-            Kiếm Phong Kim
-          </b>
-        </div>
+  <img
+    src="/images/logo.png"
+    alt="Logo Kiếm Phong Kim"
+    className="h-10 w-10 object-contain "
+  />
+  <b className="text-[24px] text-yellow-600 tracking-wide font-extrabold">
+    Kiếm Phong Kim
+  </b>
+</div>
 
-        {/* Form login / signup */}
+
         {mode === "login" ? <LoginForm /> : <SignupForm />}
 
-        {/* Chuyển form ở mobile */}
         <div className="lg:hidden text-center text-sm text-gray-600 mt-3">
           {mode === "login" ? (
             <>
@@ -84,12 +90,12 @@ export default function Auth() {
             </>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
 
-/* =================== SUB COMPONENTS =================== */
+/* ============= SUB COMPONENTS ============= */
 
 function Field({
   label,
@@ -106,8 +112,8 @@ function Field({
 }) {
   return (
     <div>
-      <div className="mb-1 text-sm text-gray-500">{label}</div>
-      <div className="flex items-center border-b-2 border-gray-200">
+      <label className="block mb-1 text-sm text-gray-500">{label}</label>
+      <div className="flex items-center border-b-2 border-gray-200 focus-within:border-yellow-500">
         {icon}
         <input
           type={type}
@@ -121,51 +127,45 @@ function Field({
   );
 }
 
-/* Icons inline */
-function IconMail() {
-  return (
-    <svg
-      className="h-[18px] w-[18px] opacity-75 ml-0.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M2 6l10 7L22 6" />
-      <rect x="2" y="6" width="20" height="12" rx="2" ry="2" />
-    </svg>
-  );
-}
-function IconLock() {
-  return (
-    <svg
-      className="h-[18px] w-[18px] opacity-75 ml-0.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  );
-}
-function IconUser() {
-  return (
-    <svg
-      className="h-[18px] w-[18px] opacity-75 ml-0.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c2-4 14-4 16 0" />
-    </svg>
-  );
-}
+const IconMail = () => (
+  <svg
+    className="h-[18px] w-[18px] opacity-75 ml-0.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path d="M2 6l10 7L22 6" />
+    <rect x="2" y="6" width="20" height="12" rx="2" ry="2" />
+  </svg>
+);
 
-/* LOGIN FORM */
+const IconLock = () => (
+  <svg
+    className="h-[18px] w-[18px] opacity-75 ml-0.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+);
+
+const IconUser = () => (
+  <svg
+    className="h-[18px] w-[18px] opacity-75 ml-0.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 20c2-4 14-4 16 0" />
+  </svg>
+);
+
 function LoginForm() {
   return (
     <form
@@ -193,7 +193,7 @@ function LoginForm() {
         />
       </div>
 
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-5 flex items-center justify-between">
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
@@ -209,10 +209,10 @@ function LoginForm() {
         </button>
       </div>
 
-      <div className="mt-4 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-gray-600">
         Hoặc đăng nhập với
-      </div>
-      <div className="mt-2 flex justify-center gap-3">
+      </p>
+      <div className="mt-3 flex justify-center gap-3">
         <button
           type="button"
           className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 font-semibold shadow-sm hover:bg-gray-50"
@@ -230,7 +230,6 @@ function LoginForm() {
   );
 }
 
-/* SIGNUP FORM */
 function SignupForm() {
   return (
     <form
@@ -263,7 +262,6 @@ function SignupForm() {
           placeholder="Tạo mật khẩu"
           icon={<IconLock />}
         />
-        {/* ➕ Thêm trường nhập lại mật khẩu */}
         <Field
           label="Nhập lại mật khẩu"
           type="password"
@@ -273,7 +271,7 @@ function SignupForm() {
         />
       </div>
 
-      <div className="mt-4 flex items-center justify-end">
+      <div className="mt-5 flex items-center justify-end">
         <button
           type="submit"
           className="rounded-full bg-yellow-500 px-6 py-3 font-bold text-white shadow-md hover:bg-yellow-600"
@@ -284,3 +282,13 @@ function SignupForm() {
     </form>
   );
 }
+
+/* Hiệu ứng ánh sáng */
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes shine {
+  0% { opacity: 0.2; transform: translateX(-100%); }
+  50% { opacity: 0.8; transform: translateX(0%); }
+  100% { opacity: 0.2; transform: translateX(100%); }
+}`;
+document.head.appendChild(style);

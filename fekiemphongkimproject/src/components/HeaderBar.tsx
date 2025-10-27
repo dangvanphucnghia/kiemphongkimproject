@@ -66,7 +66,7 @@ export default function HeaderBar() {
           <a className="flex items-center gap-1 hover:opacity-90" href="#">
             👤 <span className="font-semibold">Hội viên</span>
           </a>
-          <a className="flex items-center gap-1 hover:opacity-90" href="#">
+          <a className="flex items-center gap-1 hover:opacity-90" href="/auth">
             🔑 <span className="font-semibold">Đăng nhập</span>
           </a>
         </nav>
