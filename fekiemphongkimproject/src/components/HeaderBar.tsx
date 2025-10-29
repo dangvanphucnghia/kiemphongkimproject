@@ -63,7 +63,7 @@ export default function HeaderBar() {
 
         {/* Hội viên + Đăng nhập */}
         <nav className="flex items-center gap-6 text-sm">
-          <a className="flex items-center gap-1 hover:opacity-90" href="#">
+          <a className="flex items-center gap-1 hover:opacity-90" href="/member">
             👤 <span className="font-semibold">Hội viên</span>
           </a>
           <a className="flex items-center gap-1 hover:opacity-90" href="/auth">
@@ -73,7 +73,7 @@ export default function HeaderBar() {
 
         {/* Nút giỏ hàng cố định góc phải */}
         <a
-          href="#"
+          href="/cart"
           className="fixed top-4 right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
         >
           {/* Icon giỏ hàng */}
