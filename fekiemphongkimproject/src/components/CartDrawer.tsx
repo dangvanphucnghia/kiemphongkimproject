@@ -69,11 +69,12 @@ export default function CartDrawer({
                 <div className="sticky top-0 z-10 bg-white/10 backdrop-blur-xl border-b border-white/20">
                     <div className="px-5 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <span
-                                className="h-8 w-8 rounded-xl ring-1 ring-white/30"
-                                style={{ backgroundImage: `linear-gradient(135deg, ${GOLD_1}, ${PLATINUM})` }}
-                                aria-hidden="true"
+                            <img
+                                src="/images/logo.png"
+                                alt="Logo"
+                                className="h-8 w-8 rounded-xl ring-1 ring-white/30 object-cover"
                             />
+
                             <h2 id="cart-title" className="text-lg font-semibold text-zinc-900">Giỏ hàng</h2>
                         </div>
                         <button

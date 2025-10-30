@@ -1,23 +1,42 @@
+/* Tailwind v4 */
 @import "tailwindcss";
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-in-out;
+
+/* Khai báo token theme ngay trong CSS (KHÔNG cần tailwind.config.js) */
+@theme {
+  /* Màu chủ đạo */
+  --color-gold-300: #f0d98b;
+  --color-gold-400: #e5c667;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b28b00;
+
+  --color-platinum-50:  #f9fafb;
+  --color-platinum-100: #f3f4f6;
+  --color-platinum-200: #e5e7eb;
+  --color-platinum-300: #d1d5db;
+  --color-platinum-400: #9ca3af;
+  --color-platinum-500: #6b7280;
+
+  --color-ink-900: #1f2937; /* chữ chính */
+
+  /* Radius & Shadow token */
+  --radius-2xl: 1rem;
+  --shadow-soft: 0 8px 24px rgba(0,0,0,.08);
+  --shadow-focus: 0 0 0 3px color-mix(in oklab, var(--color-gold-500), transparent 65%);
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: translateX(0); }
+/* Tiện ích nhỏ cho focus ring đẹp và sr-only */
+@utility focus-shadow {
+  @apply outline-none shadow-[var(--shadow-focus)];
 }
-.animate-slideIn {
-  animation: slideIn 0.2s ease-in-out;
+@utility surface {
+  @apply rounded-2xl border border-platinum-200 bg-white shadow-[var(--shadow-soft)];
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+@utility btn {
+  @apply rounded-lg border px-3 py-2 text-ink-900 shadow-sm;
 }
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-in-out;
+@utility btn-ghost {
+  @apply btn border-platinum-300 bg-white hover:bg-platinum-50;
+}
+@utility btn-gold {
+  @apply btn border-gold-600 text-black bg-gradient-to-b from-gold-500 to-gold-600 hover:brightness-[.98];
 }
