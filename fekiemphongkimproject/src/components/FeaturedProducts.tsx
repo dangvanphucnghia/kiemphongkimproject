@@ -1,33 +1,11 @@
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PRODUCTS } from "../data/products";
 
-// ========== DATA ==========
+// Placeholder ảnh fallback
 const ph = (text: string) =>
   `https://placehold.co/800x800/FFF9EF/4B2E14/png?text=${encodeURIComponent(text)}`;
-
-// ========== SẢN PHẨM ==========
-const PRODUCTS = [
-  { id: 1, name: "Tượng Di Lặc gỗ Hương đá", image: ph("Tượng+Di+Lặc"), price: 1580000 },
-  { id: 2, name: "Vòng tay Trầm Hương tự nhiên", image: ph("Vòng+Trầm+Hương"), price: 960000 },
-  { id: 3, name: "Tinh dầu Tràm nguyên chất 50ml", image: ph("Tinh+Dầu+Tràm"), price: 120000, oldPrice: 150000 },
-  { id: 4, name: "Mật ong rừng nguyên chất 500ml", image: ph("Mật+Ong+Rừng"), price: 210000 },
-  { id: 5, name: "Rượu ngâm chuối hột rừng 1L", image: ph("Rượu+Chuối+Hột"), price: 390000 },
-  { id: 6, name: "Nụ trầm hương không tăm 100g", image: ph("Nụ+Trầm+Hương"), price: 180000 },
-  { id: 7, name: "Tinh dầu Sả Chanh nguyên chất 30ml", image: ph("Tinh+Dầu+Sả+Chanh"), price: 95000 },
-  { id: 8, name: "Tượng Quan Âm gỗ Bách xanh", image: ph("Tượng+Quan+Âm"), price: 2150000 },
-  { id: 9, name: "Bột sắn dây nguyên chất 500g", image: ph("Bột+Sắn+Dây"), price: 130000 },
-  { id: 10, name: "Rượu ngâm đòng đòng nếp non 1L", image: ph("Rượu+Đòng+Đòng"), price: 420000 },
-  { id: 11, name: "Tinh dầu Quế nguyên chất 30ml", image: ph("Tinh+Dầu+Quế"), price: 125000 },
-  { id: 12, name: "Rượu ngâm táo mèo vùng cao 1L", image: ph("Rượu+Táo+Mèo"), price: 410000 },
-  { id: 13, name: "Tượng Phật A Di Đà gỗ hương", image: ph("Tượng+Phật+A+Di+Đà"), price: 2980000 },
-  { id: 14, name: "Vòng tay gỗ Trắc đỏ 10ly", image: ph("Vòng+Gỗ+Trắc"), price: 490000 },
-  { id: 15, name: "Nụ trầm hương thảo mộc 200g", image: ph("Nụ+Trầm+200g"), price: 290000 },
-  { id: 16, name: "Tinh dầu Bạc Hà 50ml", image: ph("Tinh+Dầu+Bạc+Hà"), price: 115000 },
-  { id: 17, name: "Rượu ngâm nhân sâm 1L", image: ph("Rượu+Nhân+Sâm"), price: 550000 },
-  { id: 18, name: "Rượu ngâm nếp cẩm 1L", image: ph("Rượu+Nếp+Cẩm"), price: 380000 },
-  { id: 19, name: "Tượng gỗ Tam Đa Phúc Lộc Thọ", image: ph("Tượng+Tam+Đa"), price: 3250000 },
-  { id: 20, name: "Tinh dầu Oải Hương thư giãn 50ml", image: ph("Tinh+Dầu+Oải+Hương"), price: 139000 },
-];
 
 // ========== IMAGE COMPONENT ==========
 function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
@@ -77,6 +55,8 @@ function ProductGrid({
     setPage(1);
   };
 
+  const VND = new Intl.NumberFormat("vi-VN");
+
   return (
     <section className={`py-12 ${bg}`}>
       <div className="max-w-6xl mx-auto px-4">
@@ -90,50 +70,68 @@ function ProductGrid({
 
         {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
-          {visibleItems.map((p) => (
-            <article
-              key={p.id}
-              className="group bg-[#FFFCF6] rounded-2xl border border-[#E9DBC1] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative flex flex-col"
-            >
-              {/* Badge giảm giá */}
-              {p.oldPrice && (
-                <div className="absolute top-2 left-2 bg-[#C8A951] text-white text-xs font-semibold px-2 py-1 rounded-md shadow">
-                  -{Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}%
-                </div>
-              )}
+          {visibleItems.map((p) => {
+            const salePct =
+              p.oldPrice && p.oldPrice > p.price
+                ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)
+                : 0;
 
-              {/* Ảnh */}
-              <div className="w-full aspect-[1/1] overflow-hidden bg-[#FFF9EF] flex items-center justify-center">
-                <ImageWithFallback src={p.image} alt={p.name} />
-              </div>
-
-              {/* Nội dung */}
-              <div className="p-4 flex flex-col justify-between flex-grow">
-                <div className="flex-grow">
-                  <h3 className="font-semibold text-[#3F250C] group-hover:text-[#C8A951] leading-snug text-[15px] line-clamp-2">
-                    {p.name}
-                  </h3>
-                </div>
-
-                {/* Giá + nút */}
-                <div className="mt-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[#B8860B] font-bold text-lg">
-                      {p.price.toLocaleString()}₫
-                    </span>
-                    {p.oldPrice && (
-                      <span className="text-gray-400 line-through text-sm">
-                        {p.oldPrice.toLocaleString()}₫
-                      </span>
-                    )}
+            return (
+              <article
+                key={p.id}
+                className="group bg-[#FFFCF6] rounded-2xl border border-[#E9DBC1] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative flex flex-col"
+              >
+                {/* Badge giảm giá */}
+                {salePct > 0 && (
+                  <div className="absolute top-2 left-2 bg-[#C8A951] text-white text-xs font-semibold px-2 py-1 rounded-md shadow">
+                    -{salePct}%
                   </div>
-                  <button className="mt-2 w-full bg-[#FFF9EF] border border-[#C8A951] text-[#6A4521] font-medium py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-[#C8A951] hover:text-white transition-colors text-sm">
-                    <ShoppingCart size={16} /> Thêm vào giỏ
-                  </button>
+                )}
+
+                {/* Ảnh (click mở chi tiết) */}
+                <Link to={`/san-pham/${p.slug}`} state={{ product: p }} className="block w-full">
+                  <div className="w-full aspect-[1/1] overflow-hidden bg-[#FFF9EF] flex items-center justify-center">
+                    <ImageWithFallback src={p.image} alt={p.name} />
+                  </div>
+                </Link>
+
+                {/* Nội dung */}
+                <div className="p-4 flex flex-col justify-between flex-grow">
+                  <div className="flex-grow">
+                    {/* Tiêu đề (click mở chi tiết) */}
+                    <Link to={`/san-pham/${p.slug}`} state={{ product: p }} className="block">
+                      <h3 className="font-semibold text-[#3F250C] group-hover:text-[#C8A951] leading-snug text-[15px] line-clamp-2">
+                        {p.name}
+                      </h3>
+                    </Link>
+                  </div>
+
+                  {/* Giá + nút */}
+                  <div className="mt-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[#B8860B] font-bold text-lg">
+                        {VND.format(p.price)}₫
+                      </span>
+                      {p.oldPrice && p.oldPrice > p.price && (
+                        <span className="text-gray-400 line-through text-sm">
+                          {VND.format(p.oldPrice)}₫
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      className="mt-2 w-full bg-[#FFF9EF] border border-[#C8A951] text-[#6A4521] font-medium py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-[#C8A951] hover:text-white transition-colors text-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: mở drawer giỏ hàng UI-only nếu muốn
+                      }}
+                    >
+                      <ShoppingCart size={16} /> Thêm vào giỏ
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
 
         {/* Điều khiển dưới grid */}

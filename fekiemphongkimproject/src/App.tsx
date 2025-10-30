@@ -13,6 +13,8 @@ import Promotions from './admin/pages/Promotions';
 import Orders from './admin/pages/Orders';
 import Revenue from './admin/pages/Revenue';
 import Banners from './admin/pages/Banners';
+import ProductsPage from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
 
 export default function App() {
   return (
@@ -22,6 +24,9 @@ export default function App() {
       <Route path="/member" element={<Member />} />
       <Route path="/cart" element={<Home />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/san-pham" element={<ProductsPage />} />
+      <Route path="/san-pham/:slug" element={<ProductDetail />} />
+
       <Route path="*" element={<Navigate to="/" replace />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
