@@ -20,6 +20,9 @@ export default function Footer() {
           <p className="text-sm mt-2">
             📍 <strong>CS1:</strong> Tầng 1 TTTM Go Huế - 174 Bà Triệu, TP Huế
           </p>
+          <p className="text-sm mt-2">
+            📍 <strong>CS2:</strong> CS2: 170 Phan Bội Châu, TP Huế
+          </p>
         </div>
 
         {/* Cột 2: Liên hệ */}
