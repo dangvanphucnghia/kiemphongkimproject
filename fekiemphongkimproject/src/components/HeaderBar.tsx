@@ -11,7 +11,7 @@ export default function HeaderBar() {
   ];
 
   return (
-    <header className="bg-[#F4E04D] text-[#2E2E2E] relative z-50">
+    <header className="bg-[#F4E04D] text-[#2E2E2E] relative z-[1000]">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4 relative">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
