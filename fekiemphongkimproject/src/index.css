@@ -40,3 +40,10 @@
 @utility btn-gold {
   @apply btn border-gold-600 text-black bg-gradient-to-b from-gold-500 to-gold-600 hover:brightness-[.98];
 }
+/* === Custom: Wood grain background utility === */
+.bg-wood {
+  /* texture vân gỗ dạng data URI (đã nhúng) */
+  background-image: url("/img/wood-bg.png");
+  background-repeat: repeat;
+  background-size: 256px 256px; /* kích thước tile */
+}
