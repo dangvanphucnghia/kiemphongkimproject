@@ -9,30 +9,13 @@ export type MenuItem = { key: string; label: string; href?: string; items?: Menu
 const BRAND = { phone: "039 573 2017" };
 const HOTLINES: string[] = ["0968 809 609", "0931 919 114", "0931 999 114"];
 
-/** MENU có cả 2 cấp và 3 cấp (ví dụ: Di Lặc -> Chúc Phúc -> biến thể) */
+/** MENU có cả 2 cấp và 3 cấp (đã thay Di Lặc, Quan Công, Tam Đa, Bài viết bằng 1 mục tổng) */
 const MENU: MenuItem[] = [
   {
     key: "tuong-go",
     label: "TƯỢNG GỖ",
     href: "/tuong-go",
     items: [
-      {
-        label: "Di Lặc",
-        href: "/tuong-go/di-lac",
-        children: [
-          {
-            label: "Di Lặc Chúc Phúc",
-            href: "/tuong-go/di-lac/chuc-phuc",
-            children: [
-              { label: "Bản nhỏ", href: "/tuong-go/di-lac/chuc-phuc/ban-nho" },
-              { label: "Bản trung", href: "/tuong-go/di-lac/chuc-phuc/ban-trung" },
-              { label: "Bản lớn", href: "/tuong-go/di-lac/chuc-phuc/ban-lon" },
-            ],
-          },
-          { label: "Di Lặc Gánh Vàng", href: "/tuong-go/di-lac/ganh-vang" },
-          { label: "Di Lặc Ngũ Phúc", href: "/tuong-go/di-lac/ngu-phuc" },
-        ],
-      },
       { label: "Quan Công", href: "/tuong-go/quan-cong" },
       { label: "Tam Đa", href: "/tuong-go/tam-da" },
       { label: "Khổng Minh", href: "/tuong-go/khong-minh" },
@@ -129,11 +112,95 @@ const MENU: MenuItem[] = [
       { label: "Tranh Phật", href: "/tranh-go/tranh-phat" },
     ],
   },
-  { key: "di-lac", label: "DI LẶC", href: "/di-lac" },
-  { key: "quan-cong", label: "QUAN CÔNG", href: "/quan-cong" },
-  { key: "tam-da", label: "TAM ĐA", href: "/tam-da" },
-  { key: "bai-viet", label: "BÀI VIẾT", href: "/bai-viet" },
+
+  /* === MỤC TỔNG HỢP MỚI === */
+  {
+    key: "hang-hien-co",
+    label: "🌿 CÁC MẶT HÀNG HIỆN CÓ",
+    href: "/hang-hien-co",
+    items: [
+      {
+        label: "Tượng gỗ tâm linh – phong thủy",
+        href: "/hang-hien-co/tuong-go",
+        children: [
+          {
+            label: "Chất liệu",
+            href: "/hang-hien-co/tuong-go/chat-lieu",
+            children: [
+              { label: "Gỗ Hương đá", href: "/hang-hien-co/tuong-go/huong-da" },
+              { label: "Gỗ Hương Việt Nam", href: "/hang-hien-co/tuong-go/huong-viet" },
+              { label: "Gỗ Bách xanh", href: "/hang-hien-co/tuong-go/bach-xanh" },
+              { label: "Gỗ Trắc", href: "/hang-hien-co/tuong-go/trac" },
+              { label: "Gỗ Mít", href: "/hang-hien-co/tuong-go/mit" },
+            ],
+          },
+          {
+            label: "Sản phẩm",
+            href: "/hang-hien-co/tuong-go/san-pham",
+            children: [
+              { label: "Tượng Di Lặc", href: "/hang-hien-co/tuong-go/di-lac" },
+              { label: "Phật Bà Quan Âm", href: "/hang-hien-co/tuong-go/quan-am" },
+              { label: "Thích Ca – Đạt Ma", href: "/hang-hien-co/tuong-go/thich-ca-dat-ma" },
+              { label: "Tam Đa", href: "/hang-hien-co/tuong-go/tam-da" },
+              { label: "Tỳ Hưu – Cóc ngậm tiền", href: "/hang-hien-co/tuong-go/ty-huu-coc" },
+              { label: "Đặt khắc theo yêu cầu", href: "/hang-hien-co/tuong-go/dat-khac" },
+            ],
+          },
+        ],
+      },
+
+      {
+        label: "Trầm hương – tinh hoa thiên nhiên",
+        href: "/hang-hien-co/tram-huong",
+        children: [
+          { label: "Trầm cảnh / trang trí", href: "/hang-hien-co/tram-huong/tram-canh" },
+          { label: "Vòng tay trầm hương", href: "/hang-hien-co/tram-huong/vong-tay" },
+          { label: "Nụ trầm / trầm xông", href: "/hang-hien-co/tram-huong/nu-tram" },
+          { label: "Thác khói trầm hương", href: "/hang-hien-co/tram-huong/thac-khoi" },
+          { label: "Trầm đốt – trầm miếng", href: "/hang-hien-co/tram-huong/tram-dot" },
+          { label: "Tinh dầu trầm nguyên chất", href: "/hang-hien-co/tram-huong/tinh-dau-tram" },
+        ],
+      },
+
+      {
+        label: "Tinh dầu truyền thống",
+        href: "/hang-hien-co/tinh-dau",
+        children: [
+          { label: "Tinh dầu tràm (chống cảm, muỗi)", href: "/hang-hien-co/tinh-dau/tinh-dau-tram" },
+          { label: "Tinh dầu bưởi (dưỡng tóc)", href: "/hang-hien-co/tinh-dau/tinh-dau-buoi" },
+          { label: "Sả chanh / Sả java / Quế", href: "/hang-hien-co/tinh-dau/sa-chanh-sa-java-que" },
+        ],
+      },
+
+      {
+        label: "Thực phẩm tự nhiên – sức khỏe gia đình",
+        href: "/hang-hien-co/thuc-pham",
+        children: [
+          { label: "Mật ong rừng nguyên chất", href: "/hang-hien-co/thuc-pham/mat-ong" },
+          { label: "Bột sắn dây", href: "/hang-hien-co/thuc-pham/bot-san-day" },
+          { label: "Tinh bột nghệ vàng", href: "/hang-hien-co/thuc-pham/tinh-bot-nghe" },
+          { label: "Yến sào", href: "/hang-hien-co/thuc-pham/yen-sao" },
+        ],
+      },
+
+      {
+        label: "Rượu ngâm truyền thống (quảng bá)",
+        href: "/hang-hien-co/ruou-ngam",
+        children: [
+          { label: "Chuối hột rừng", href: "/hang-hien-co/ruou-ngam/chuoi-hot" },
+          { label: "Nếp đục / nếp non đòng đòng", href: "/hang-hien-co/ruou-ngam/nep" },
+          { label: "Trái cây mix", href: "/hang-hien-co/ruou-ngam/trai-cay-mix" },
+          { label: "Ngô bao tử…", href: "/hang-hien-co/ruou-ngam/ngo-bao-tu" },
+          { label: "Ghi chú: sản phẩm quảng bá, không hiển thị giá", href: "/hang-hien-co/ruou-ngam/thong-tin" },
+        ],
+      },
+    ],
+  },
+
+  // Các mục còn lại giữ nguyên
+  { key: "noi-dung", label: "BÀI VIẾT", href: "/bai-viet" }, // (nếu vẫn muốn một mục dẫn blog)
 ];
+
 
 export default function SubBar() {
   const [openKey, setOpenKey] = useState<string | null>(null);
