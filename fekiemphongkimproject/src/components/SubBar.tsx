@@ -168,7 +168,7 @@ const MENU: MenuItem[] = [
         children: [
           { label: "Tinh dầu tràm (chống cảm, muỗi)", href: "/hang-hien-co/tinh-dau/tinh-dau-tram" },
           { label: "Tinh dầu bưởi (dưỡng tóc)", href: "/hang-hien-co/tinh-dau/tinh-dau-buoi" },
-          { label: "Sả chanh / Sả java / Quế", href: "/hang-hien-co/tinh-dau/sa-chanh-sa-java-que" },
+          { label: "Sả chanh/quế", href: "/hang-hien-co/tinh-dau/sa-chanh-sa-java-que" },
         ],
       },
 
@@ -225,11 +225,12 @@ export default function SubBar() {
 
   return (
     // ↑ tạo stacking context mạnh để dropdown đè nội dung phía dưới
-    <header className="relative z-[200] isolate border-b bg-wood" ref={wrapRef}>
+    <header className="relative z-[1200] isolate border-b bg-wood" ref={wrapRef}>
+
       <nav className="bg-transparent">
         <div className="max-w-6xl mx-auto px-4">
           {/* hộp trắng ở trên cùng của stack */}
-          <div className="my-3 rounded-lg bg-white border border-neutral-100 shadow-[0_4px_14px_rgba(0,0,0,0.12)] relative z-[210]">
+          <div className="my-3 rounded-lg bg-white border border-neutral-100 shadow-[0_4px_14px_rgba(0,0,0,0.12)] relative z-[1210]">
             {/* chỉ cuộn ngang; cho phép tràn theo trục dọc để dropdown không bị cắt */}
             <div className="relative overflow-y-visible overflow-x-auto lg:overflow-x-visible no-scrollbar overflow-visible">
               <ul className="flex items-center h-9 gap-3 px-3 min-w-max">
@@ -293,7 +294,3 @@ function NavItem({
   );
 }
 
-/* Ẩn scrollbar cho scroller nếu chưa có trong CSS global:
-.no-scrollbar::-webkit-scrollbar{display:none}
-.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-*/
