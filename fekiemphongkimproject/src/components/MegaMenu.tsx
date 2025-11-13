@@ -34,9 +34,9 @@ export default function MegaMenu({ items, onClose }: Props) {
   return (
     <div
       className={[
-        "absolute left-0 top-full mt-2",
+        "absolute left-0 top-0 mt-0 ",
         "z-[1200] rounded-lg border border-neutral-200 bg-white shadow-xl", // ↑ nâng từ 220
-        "min-w-[260px] relative",
+        "min-w-[260px] ",
       ].join(" ")}
       onMouseEnter={clearClose}
       onMouseLeave={scheduleClose}
