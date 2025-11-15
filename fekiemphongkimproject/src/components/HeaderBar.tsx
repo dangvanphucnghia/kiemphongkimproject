@@ -11,7 +11,7 @@ export default function HeaderBar() {
   ];
 
   return (
-    <header className="z-[99999] bg-[#F4E04D] text-[#2E2E2E] relative z-[1000]">
+    <header className="z-[9999] bg-[#F4E04D] text-[#2E2E2E] relative z-[1000]">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4 relative">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export default function HeaderBar() {
         
         <a
           href="/cart"
-          className="fixed top-4 right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
+          className="fixed top-[100px] right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
         >
           {/* Icon giỏ hàng */}
           <div className="relative">

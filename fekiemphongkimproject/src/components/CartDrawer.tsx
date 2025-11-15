@@ -55,7 +55,7 @@ export default function CartDrawer({
                 className={`fixed top-0 right-0 h-screen w-full md:w-1/2
                     backdrop-blur-2xl bg-white/12 md:rounded-l-3xl
                     border-l border-white/20 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)]
-                    transition-transform duration-300 ease-out motion-reduce:transition-none z-50
+                    transition-transform duration-300 ease-out motion-reduce:transition-none z-99999
                     ${open ? "translate-x-0" : "translate-x-full"}`}
                 style={{ willChange: "transform" }}
             >
