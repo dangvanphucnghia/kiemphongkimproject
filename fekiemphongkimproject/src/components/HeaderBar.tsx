@@ -75,7 +75,7 @@ export default function HeaderBar() {
         
         <a
           href="/cart"
-          className="fixed top-[100px] right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
+          className="fixed top-[114px] right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
         >
           {/* Icon giỏ hàng */}
           <div className="relative">
