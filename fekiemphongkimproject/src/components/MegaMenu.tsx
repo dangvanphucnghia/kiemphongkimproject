@@ -63,7 +63,7 @@ export default function MegaMenu({ items, onClose }: Props) {
             >
               <a
                 href={it.href}
-                className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[14px] hover:bg-neutral-50"
+                className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[8.5px] hover:bg-neutral-50"
                 onClick={onClose}
               >
                 <span className="text-neutral-800 whitespace-nowrap">{it.label}</span>
@@ -98,7 +98,7 @@ export default function MegaMenu({ items, onClose }: Props) {
                       >
                         <a
                           href={c2.href}
-                          className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[14px] hover:bg-neutral-50"
+                          className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[8.5px] hover:bg-neutral-50"
                           onClick={onClose}
                         >
                           <span className="text-neutral-800 whitespace-nowrap">{c2.label}</span>
@@ -123,7 +123,7 @@ export default function MegaMenu({ items, onClose }: Props) {
                               <li key={(c3.href || c3.label) + k}>
                                 <a
                                   href={c3.href}
-                                  className="block px-4 py-2 text-[14px] hover:bg-neutral-50 text-neutral-800 whitespace-nowrap"
+                                  className="block px-4 py-2 text-[8.5px] hover:bg-neutral-50 text-neutral-800 whitespace-nowrap"
                                   onClick={onClose}
                                 >
                                   {c3.label}
