@@ -3,6 +3,7 @@ package com.phucnghia.kiemphongkim.dto.response;
 import com.phucnghia.kiemphongkim.entity.Role;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -14,5 +15,5 @@ public class UserResponse {
     private Long id;
     private String username;
     private String email;
-    private Set<Role> roles;
+    private List<String> roles;
 }
