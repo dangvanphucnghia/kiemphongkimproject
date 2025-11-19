@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e3926f5c-36df-4848-bb5f-df628db57765" name="Changes" comment="update login register back-end by Nghia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fekiemphongkimproject/src/pages/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/fekiemphongkimproject/src/pages/Auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fekiemphongkimproject/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/fekiemphongkimproject/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiemphongkim/src/main/java/com/phucnghia/kiemphongkim/dto/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/kiemphongkim/src/main/java/com/phucnghia/kiemphongkim/dto/response/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiemphongkim/src/main/java/com/phucnghia/kiemphongkim/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kiemphongkim/src/main/java/com/phucnghia/kiemphongkim/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fekiemphongkimproject/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/fekiemphongkimproject/src/App.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

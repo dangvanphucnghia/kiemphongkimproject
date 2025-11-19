@@ -15,6 +15,7 @@ import Revenue from './admin/pages/Revenue';
 import Banners from './admin/pages/Banners';
 import ProductsPage from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
+import AdminRoute from "./admin/components/AdminRoute"
 
 export default function App() {
   return (
@@ -28,7 +29,16 @@ export default function App() {
       <Route path="/san-pham/:slug" element={<ProductDetail />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-      <Route path="/admin" element={<AdminLayout />}>
+
+      {/* Bọc toàn bộ admin */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
         <Route index element={<Dashboard />} />
         <Route path="products" element={<Products />} />
         <Route path="categories" element={<Categories />} />
