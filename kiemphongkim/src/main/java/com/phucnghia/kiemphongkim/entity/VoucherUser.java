@@ -1,0 +1,31 @@
+package com.phucnghia.kiemphongkim.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.Date;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "voucher_user")
+public class VoucherUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "used_at")
+    private Date usedAt;
+}

@@ -1,0 +1,16 @@
+package com.phucnghia.kiemphongkim.dto.request;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class UpdateCartItemRequest {
+
+    @NotNull(message = "Mã item trong giỏ không được để trống")
+    private Long cartItemId;
+
+    @NotNull(message = "Số lượng không được để trống")
+    @Min(value = 1, message = "Số lượng phải ít nhất là 1")
+    private Integer quantity;
+}

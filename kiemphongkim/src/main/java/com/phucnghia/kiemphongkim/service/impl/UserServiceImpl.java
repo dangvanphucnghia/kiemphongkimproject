@@ -11,11 +11,13 @@ import com.phucnghia.kiemphongkim.repository.UserRepository;
 import com.phucnghia.kiemphongkim.service.JpaUserDetailsService;
 import com.phucnghia.kiemphongkim.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Set;
 
 @Service
@@ -34,11 +36,20 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Username đã tồn tại");
         if (userRepository.existsByEmail(req.getEmail()))
             throw new IllegalArgumentException("Email đã tồn tại");
+        if (userRepository.existsByPhoneNumber(req.getPhoneNumber()))
+            throw new IllegalArgumentException("Số điện thoại đã tồn tại");
+
+        Date now = new Date();
 
         User u = User.builder()
                 .username(req.getUsername())
                 .email(req.getEmail())
                 .password(encoder.encode(req.getPassword()))
+                .fullname(req.getFullName())
+                .phoneNumber(req.getPhoneNumber())
+                .address(req.getAddress())
+                .createdAt(now)
+                .updatedAt(now)
                 .roles(Set.of(Role.ROLE_USER))
                 .build();
 
@@ -48,15 +59,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponse login(LoginRequest req) {
-        // xác thực
+        // xác thực username/email + password
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getUsernameOrEmail(), req.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        req.getUsernameOrEmail(),
+                        req.getPassword()
+                )
         );
 
-        var userDetails = userDetailsService.loadUserByUsername(req.getUsernameOrEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsernameOrEmail());
         String token = jwtService.generateToken(userDetails);
-        User user = userRepository.findByUsernameOrEmail(req.getUsernameOrEmail(), req.getUsernameOrEmail())
-                .orElseThrow();
+
+        User user = userRepository
+                .findByUsernameOrEmail(req.getUsernameOrEmail(), req.getUsernameOrEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User không tồn tại"));
 
         return AuthResponse.builder()
                 .token(token)
@@ -76,6 +92,9 @@ public class UserServiceImpl implements UserService {
                 .id(u.getId())
                 .username(u.getUsername())
                 .email(u.getEmail())
+                .fullName(u.getFullname())        // field trong entity là fullname
+                .phoneNumber(u.getPhoneNumber())
+                .address(u.getAddress())
                 .roles(
                         u.getRoles().stream()
                                 .map(Role::name)
@@ -83,6 +102,4 @@ public class UserServiceImpl implements UserService {
                 )
                 .build();
     }
-
 }
-

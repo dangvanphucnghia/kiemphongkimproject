@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class LoginRequest {
-    @NotBlank
+
+    @NotBlank(message = "Vui lòng nhập tài khoản hoặc email")
     private String usernameOrEmail;
 
-    @NotBlank
+    @NotBlank(message = "Vui lòng nhập mật khẩu")
     private String password;
 }
-

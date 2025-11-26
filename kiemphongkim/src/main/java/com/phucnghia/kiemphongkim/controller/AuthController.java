@@ -26,4 +26,8 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(userService.login(request));
     }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok().body("{Logout successfullly!!!}");
+    }
 }

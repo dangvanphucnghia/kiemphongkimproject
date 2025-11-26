@@ -25,6 +25,18 @@ public class User {
     @Column(nullable=false)
     private String password;
 
+    @Column(nullable=false, unique=true, length=100)
+    private String fullname;
+
+    private int phoneNumber;
+
+    @Column(nullable=false, unique=true, length=100)
+    private String address;
+
+    private Date createdAt;
+
+    private Date updatedAt;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
