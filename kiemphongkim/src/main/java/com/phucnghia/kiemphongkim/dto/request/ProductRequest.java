@@ -17,6 +17,10 @@ public class ProductRequest {
     @Positive(message = "Giá sản phẩm phải lớn hơn 0")
     private Integer price;
 
+    @NotNull(message = "Số lượng không được để trống")
+    @Min(value = 0, message = "Số lượng không được âm")
+    private int quantity;
+
     @Positive(message = "Giá khuyến mãi phải lớn hơn 0")
     private Integer salePrice;
 

@@ -21,6 +21,8 @@ public class Product {
 
     private Integer price;
 
+    private int quantity;
+
     @Column(name = "sale_price")
     private Integer salePrice;
 

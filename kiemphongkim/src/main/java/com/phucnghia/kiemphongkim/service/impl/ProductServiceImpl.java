@@ -39,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = Product.builder()
                 .name(request.getName())
                 .price(request.getPrice())
+                .quantity(request.getQuantity())
                 .salePrice(request.getSalePrice())
                 .description(request.getDescription())
                 .stock(request.getStock())
@@ -78,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse update(Long id, ProductRequest request) {
+    public void update(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
 
@@ -87,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
         product.setName(request.getName());
         product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
         product.setSalePrice(request.getSalePrice());
         product.setDescription(request.getDescription());
         product.setStock(request.getStock());
@@ -121,8 +123,6 @@ public class ProductServiceImpl implements ProductService {
                 productFilterRepository.save(pf);
             }
         }
-
-        return toProductResponse(product);
     }
 
     @Override
@@ -198,6 +198,7 @@ public class ProductServiceImpl implements ProductService {
                 .id(p.getId())
                 .name(p.getName())
                 .price(p.getPrice())
+                .quantity(p.getQuantity())
                 .salePrice(p.getSalePrice())
                 .description(p.getDescription())
                 .stock(p.getStock())
