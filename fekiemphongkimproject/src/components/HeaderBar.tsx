@@ -1,8 +1,20 @@
-import { useState } from "react";
-import { ShoppingCart } from "lucide-react"; // ← icon hiện đại (lucide-react)
+import { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { logout } from "../lib/api";
+
+type CurrentUser = {
+  username?: string;
+  fullName?: string;
+  email?: string;
+  roles?: string[];
+};
 
 export default function HeaderBar() {
   const [open, setOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const navigate = useNavigate();
+
   const cartCount = 3; // Giả lập số lượng trong giỏ
 
   const chiNhanhs = [
@@ -10,13 +22,51 @@ export default function HeaderBar() {
     { name: "CS2: 170 Phan Bội Châu, TP Huế" },
   ];
 
+  // Lấy user từ localStorage (đã lưu khi login)
+  useEffect(() => {
+    const raw = localStorage.getItem("user");
+    if (!raw) return;
+    try {
+      const u = JSON.parse(raw);
+      setCurrentUser(u);
+    } catch (e) {
+      console.error("Parse user from localStorage failed", e);
+    }
+  }, []);
+
+  // Tên hiển thị
+  const displayName =
+    currentUser?.fullName ||
+    currentUser?.username ||
+    currentUser?.email ||
+    "Tài khoản";
+
+  async function handleLogout() {
+    const ok = confirm("Bạn có chắc muốn đăng xuất?");
+    if (!ok) return;
+
+    await logout();          // xoá token + user + gọi BE /api/auth/logout
+    setCurrentUser(null);    // cập nhật UI
+    navigate("/auth");       // chuyển về trang đăng nhập
+  }
+    function handleCartClick() {
+    if (!currentUser) {
+      // Chưa đăng nhập -> chuyển sang trang đăng nhập
+      navigate("/auth");
+    } else {
+      // Đã đăng nhập -> cho vào giỏ hàng
+      navigate("/cart");
+    }
+  }
+
+
   return (
     <header className="z-[9999] bg-[#F4E04D] text-[#2E2E2E] relative z-[1000]">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4 relative">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <img src="/images/logo.png" alt="Kiếm Phong Kim" className="h-8" />
-        </a>
+        </Link>
 
         {/* Search */}
         <div className="flex-1">
@@ -61,28 +111,48 @@ export default function HeaderBar() {
           )}
         </div>
 
-        {/* Hội viên + Đăng nhập */}
+        {/* Hội viên + Đăng nhập / Thông tin người dùng + Đăng xuất */}
         <nav className="flex items-center gap-6 text-sm">
-          <a className="flex items-center gap-1 hover:opacity-90" href="/member">
+          <Link className="flex items-center gap-1 hover:opacity-90" to="/member">
             👤 <span className="font-semibold">Hội viên</span>
-          </a>
-          <a className="flex items-center gap-1 hover:opacity-90" href="/auth">
-            🔑 <span className="font-semibold">Đăng nhập</span>
-          </a>
+          </Link>
+
+          {/* Nếu CHƯA đăng nhập => hiện nút Đăng nhập */}
+          {!currentUser && (
+            <Link className="flex items-center gap-1 hover:opacity-90" to="/auth">
+              🔑 <span className="font-semibold">Đăng nhập</span>
+            </Link>
+          )}
+
+          {/* Nếu ĐÃ đăng nhập => hiện tên + nút Đăng xuất */}
+          {currentUser && (
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1 text-xs md:text-sm">
+                👋 <span className="font-semibold truncate max-w-[120px] md:max-w-[180px]">
+                  {displayName}
+                </span>
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-xs md:text-sm rounded-full border border-[#2E2E2E]/50 px-3 py-1 hover:bg-[#FFF8E1] transition"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          )}
         </nav>
 
         {/* Nút giỏ hàng cố định góc phải */}
-        
-        <a
-          href="/cart"
+                {/* Nút giỏ hàng cố định góc phải */}
+        <button
+          type="button"
+          onClick={handleCartClick}
           className="fixed top-[114px] right-6 flex items-center gap-3 bg-white text-[#D4AF37] rounded-full shadow-md px-4 py-2 hover:bg-[#FFF8E1] transition-all duration-200"
         >
-          {/* Icon giỏ hàng */}
           <div className="relative">
             <div className="bg-[#D4AF37] text-white p-2 rounded-full">
               <ShoppingCart className="w-5 h-5" />
             </div>
-            {/* Badge số lượng */}
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5">
                 {cartCount}
@@ -90,7 +160,8 @@ export default function HeaderBar() {
             )}
           </div>
           <span className="font-semibold text-sm">Giỏ hàng</span>
-        </a>
+        </button>
+
       </div>
     </header>
   );

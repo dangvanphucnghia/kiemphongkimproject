@@ -26,7 +26,9 @@ export default function App() {
       <Route path="/cart" element={<Home />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/san-pham" element={<ProductsPage />} />
-      <Route path="/san-pham/:slug" element={<ProductDetail />} />
+      <Route path="/san-pham/:productId" element={<ProductDetail />} />
+      <Route path="/danh-muc/:categorySlug" element={<ProductsPage />} />
+
 
       <Route path="*" element={<Navigate to="/" replace />} />
 

@@ -4,25 +4,27 @@ type TableProps = {
   columns: string[];
   rows: (string | number | ReactNode)[][];
   onCreate?: () => void;
+  onEditRow?: (rowIndex: number) => void;
+  onDeleteRow?: (rowIndex: number) => void;
 };
 
-export default function Table({ columns, rows, onCreate }: TableProps) {
+export default function Table({ columns, rows, onCreate, onEditRow, onDeleteRow }: TableProps) {
   return (
     <div className="rounded-2xl border border-platinum-700 bg-gradient-to-b from-[#1b1c22] to-[#16171c] p-4">
       <div className="mb-2 flex items-center gap-2">
         <input
           className="rounded-lg border border-slate-700 bg-platinum-900 px-3 py-2 text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-gold-500/30"
-          placeholder="Lọc theo từ khóa…"
+          placeholder="Lọc theo từ khóa… (chưa làm)"
         />
         <div className="flex-1" />
-        <button
-          onClick={onCreate}
-          className="rounded-lg border border-amber-700 bg-gradient-to-b from-gold-500 to-gold-600 px-3 py-2 font-semibold text-black"
-        >
-          + Tạo mới
-        </button>
-        <button className="rounded-lg border border-slate-600 bg-transparent px-3 py-2">Nhập</button>
-        <button className="rounded-lg border border-slate-600 bg-transparent px-3 py-2">Xuất</button>
+        {onCreate && (
+          <button
+            onClick={onCreate}
+            className="rounded-lg border border-amber-700 bg-gradient-to-b from-gold-500 to-gold-600 px-3 py-2 font-semibold text-black"
+          >
+            + Tạo mới sản phẩm
+          </button>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -46,10 +48,7 @@ export default function Table({ columns, rows, onCreate }: TableProps) {
                   </td>
                 ))}
                 <td className="border-b border-platinum-700 px-3 py-2 text-right">
-                  <button className="mr-2 rounded-lg border border-slate-600 bg-transparent px-2 py-1">Sửa</button>
-                  <button className="rounded-lg border border-amber-700 bg-gradient-to-b from-gold-500 to-gold-600 px-2 py-1 text-black">
-                    Xóa
-                  </button>
+                  
                 </td>
               </tr>
             ))}
@@ -59,7 +58,7 @@ export default function Table({ columns, rows, onCreate }: TableProps) {
 
       <div className="mt-2 flex items-center justify-center gap-2 text-slate-400">
         <button className="rounded-lg border border-slate-600 bg-transparent px-2 py-1">«</button>
-        <span>Trang 1/1</span>
+        <span>Trang 1/1 (demo)</span>
         <button className="rounded-lg border border-slate-600 bg-transparent px-2 py-1">»</button>
       </div>
     </div>

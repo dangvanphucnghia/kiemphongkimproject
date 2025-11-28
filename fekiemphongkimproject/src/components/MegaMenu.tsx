@@ -1,15 +1,22 @@
 // src/components/MegaMenu.tsx
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { MenuNode } from "./SubBar";
 
 type Props = { items: MenuNode[]; onClose?: () => void };
 
+// Nếu MenuNode có thêm categoryId thì dùng được luôn
+type MenuNodeWithCat = MenuNode & { categoryId?: number | string };
+
+function nodeToUrl(node: MenuNodeWithCat) {
+  if (node.categoryId != null) {
+    return `/san-pham?categoryId=${node.categoryId}`;
+  }
+  return node.href || "#";
+}
+
 /**
- * Fixes:
- * 1) Align submenus evenly: dùng top-0 (không dùng top-2) để panel L2/L3 bám đúng item.
- * 2) Tránh chữ L1 “mất” khi hover: đặt relative z-10 cho <a> và ép màu chữ ổn định.
- * 3) Bỏ mt-[200px] => mt-2 để panel sát nút, không tạo khoảng rơi lớn.
- * 4) Thêm whitespace-nowrap để không xuống dòng/đứt chữ khi hẹp.
+ * Mega menu 3 cấp
  */
 export default function MegaMenu({ items, onClose }: Props) {
   const [lv1, setLv1] = useState<number | null>(null);
@@ -34,9 +41,9 @@ export default function MegaMenu({ items, onClose }: Props) {
   return (
     <div
       className={[
-        "absolute left-0 top-[29px] mt-0 ",
-        "z-[1200] rounded-lg border border-neutral-200 bg-white shadow-xl", // ↑ nâng từ 220
-        "min-w-[260px]",//relative
+        "absolute left-0 top-[29px] mt-0",
+        "z-[1200] rounded-lg border border-neutral-200 bg-white shadow-xl",
+        "min-w-[260px]",
       ].join(" ")}
       onMouseEnter={clearClose}
       onMouseLeave={scheduleClose}
@@ -49,11 +56,13 @@ export default function MegaMenu({ items, onClose }: Props) {
       {/* ===== LEVEL 1 ===== */}
       <ul className="relative py-2">
         {items.map((it, i) => {
-          const hasChild = !!it.children?.length;
+          const node = it as MenuNodeWithCat;
+          const hasChild = !!node.children?.length;
+          const url = nodeToUrl(node);
 
           return (
             <li
-              key={(it.href || it.label) + i}
+              key={(node.href || node.label) + i}
               className="group relative"
               onMouseEnter={() => {
                 clearClose();
@@ -61,18 +70,29 @@ export default function MegaMenu({ items, onClose }: Props) {
                 setLv2(null);
               }}
             >
-              <a
-                href={it.href}
+              <Link
+                to={url}
                 className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[8.5px] hover:bg-neutral-50"
                 onClick={onClose}
               >
-                <span className="text-neutral-800 whitespace-nowrap">{it.label}</span>
+                <span className="text-neutral-800 whitespace-nowrap">
+                  {node.label}
+                </span>
                 {hasChild && (
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 text-neutral-400 shrink-0" aria-hidden>
-                    <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4 text-neutral-400 shrink-0"
+                    aria-hidden
+                  >
+                    <path
+                      d="M9 6l6 6-6 6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
                   </svg>
                 )}
-              </a>
+              </Link>
 
               {/* ===== LEVEL 2 ===== */}
               {hasChild && lv1 === i && (
@@ -84,30 +104,43 @@ export default function MegaMenu({ items, onClose }: Props) {
                   {/* cầu chống rơi mép dọc giữa L1↔L2 */}
                   <div aria-hidden className="absolute top-0 -left-2 w-3 h-full" />
 
-                  {it.children!.map((c2, j) => {
-                    const hasChild2 = !!c2.children?.length;
+                  {node.children!.map((c2, j) => {
+                    const node2 = c2 as MenuNodeWithCat;
+                    const hasChild2 = !!node2.children?.length;
+                    const url2 = nodeToUrl(node2);
 
                     return (
                       <li
-                        key={(c2.href || c2.label) + j}
+                        key={(node2.href || node2.label) + j}
                         className="group relative"
                         onMouseEnter={() => {
                           clearClose();
                           setLv2(j);
                         }}
                       >
-                        <a
-                          href={c2.href}
+                        <Link
+                          to={url2}
                           className="relative z-10 flex items-center justify-between gap-3 px-4 py-2 text-[8.5px] hover:bg-neutral-50"
                           onClick={onClose}
                         >
-                          <span className="text-neutral-800 whitespace-nowrap">{c2.label}</span>
+                          <span className="text-neutral-800 whitespace-nowrap">
+                            {node2.label}
+                          </span>
                           {hasChild2 && (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 text-neutral-400 shrink-0" aria-hidden>
-                              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" />
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4 text-neutral-400 shrink-0"
+                              aria-hidden
+                            >
+                              <path
+                                d="M9 6l6 6-6 6"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              />
                             </svg>
                           )}
-                        </a>
+                        </Link>
 
                         {/* ===== LEVEL 3 ===== */}
                         {hasChild2 && lv2 === j && (
@@ -117,19 +150,27 @@ export default function MegaMenu({ items, onClose }: Props) {
                             role="menu"
                           >
                             {/* cầu chống rơi mép dọc giữa L2↔L3 */}
-                            <div aria-hidden className="absolute top-0 -left-2 w-3 h-full" />
+                            <div
+                              aria-hidden
+                              className="absolute top-0 -left-2 w-3 h-full"
+                            />
 
-                            {c2.children!.map((c3, k) => (
-                              <li key={(c3.href || c3.label) + k}>
-                                <a
-                                  href={c3.href}
-                                  className="block px-4 py-2 text-[8.5px] hover:bg-neutral-50 text-neutral-800 whitespace-nowrap"
-                                  onClick={onClose}
-                                >
-                                  {c3.label}
-                                </a>
-                              </li>
-                            ))}
+                            {node2.children!.map((c3, k) => {
+                              const node3 = c3 as MenuNodeWithCat;
+                              const url3 = nodeToUrl(node3);
+
+                              return (
+                                <li key={(node3.href || node3.label) + k}>
+                                  <Link
+                                    to={url3}
+                                    className="block px-4 py-2 text-[8.5px] hover:bg-neutral-50 text-neutral-800 whitespace-nowrap"
+                                    onClick={onClose}
+                                  >
+                                    {node3.label}
+                                  </Link>
+                                </li>
+                              );
+                            })}
                           </ul>
                         )}
                       </li>

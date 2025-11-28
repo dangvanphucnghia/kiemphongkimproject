@@ -1,17 +1,25 @@
 // AllFeaturedSections.tsx
-import { useState, useId } from "react";
+import { useState, useEffect, useId } from "react";
 import { ShoppingCart, SlidersHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PRODUCTS } from "../data/products";
+import type { Product } from "../data/products";
+import { ph } from "../data/products";
+
+/* ==== BASE URL backend để build URL ảnh ==== */
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:1212";
+
+function resolveImageUrl(src?: string, nameForPh?: string) {
+  if (!src) return ph(nameForPh || "Kiem+Phong+Kim");
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  // src kiểu /uploads/products/xxx.jpeg → prefix thêm host BE
+  return `${API_BASE}${src}`;
+}
 
 /* ==== Màu chữ tối ưu nền gỗ ==== */
 const TITLE_STROKE = { WebkitTextStroke: "0.6px rgba(0,0,0,.35)" };
 const TITLE_SHADOW = "[text-shadow:0_1px_0_#000,0_2px_6px_rgba(0,0,0,.35)]";
 
 /* ============ IMAGE ============ */
-const ph = (text: string) =>
-  `https://placehold.co/800x800/FFF9EF/4B2E14/png?text=${encodeURIComponent(text)}`;
-
 function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
   const [imgSrc, setImgSrc] = useState(src);
   const FALLBACK = ph("Kiem+Phong+Kim");
@@ -27,14 +35,42 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
 }
 
 /* ============ FILTER GROUP ============ */
-function FilterGroup({ title, items }: { title: string; items: string[] }) {
+function FilterGroup({
+  title,
+  items,
+  selected,
+  onChange,
+}: {
+  title: string;
+  items: string[];
+  selected?: string[];
+  onChange?: (val: string[]) => void;
+}) {
+  const handleToggle = (item: string) => {
+    if (!onChange) return;
+    if (selected?.includes(item)) {
+      onChange(selected.filter((v) => v !== item));
+    } else {
+      onChange([...(selected ?? []), item]);
+    }
+  };
+
   return (
     <div className="mb-4 border-b border-yellow-700/40 pb-3">
       <h4 className="text-sm font-bold text-yellow-200 mb-2">{title}</h4>
       <div className="space-y-1">
         {items.map((item) => (
-          <label key={item} className="flex items-center gap-2 text-sm text-yellow-100">
-            <input type="checkbox" className="accent-yellow-500" /> {item}
+          <label
+            key={item}
+            className="flex items-center gap-2 text-sm text-yellow-100"
+          >
+            <input
+              type="checkbox"
+              className="accent-yellow-500"
+              checked={selected?.includes(item) ?? false}
+              onChange={() => handleToggle(item)}
+            />{" "}
+            {item}
           </label>
         ))}
       </div>
@@ -78,12 +114,18 @@ function Pagination({ page, setPage, totalPages }: any) {
 }
 
 /* ============ PRODUCT CARD ============ */
-function ProductCard({ p }: { p: any }) {
+function ProductCard({ p }: { p: Product }) {
   const VND = new Intl.NumberFormat("vi-VN");
+  const price = p.salePrice ?? p.price ?? 0;
+  const oldPrice = (p as any).oldPrice ?? p.price; // oldPrice có thể không có trong API
   const salePct =
-    p.oldPrice && p.oldPrice > p.price
-      ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)
+    oldPrice && oldPrice > price
+      ? Math.round(((oldPrice - price) / oldPrice) * 100)
       : 0;
+
+  // DÙNG HÀM RESOLVE ĐỂ ĐỔI /uploads/... → http://localhost:1212/uploads/...
+  const mainImg = resolveImageUrl(p.imageUrls?.[0], p.name);
+
   return (
     <article className="group bg-[#FFFCF6] rounded-2xl border border-[#E9DBC1] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative flex flex-col">
       {salePct > 0 && (
@@ -91,13 +133,14 @@ function ProductCard({ p }: { p: any }) {
           -{salePct}%
         </div>
       )}
-      <Link to={`/san-pham/${p.slug}`} className="block w-full">
+      {/* LINK DÙNG ID */}
+      <Link to={`/san-pham/${p.id}`} className="block w-full">
         <div className="aspect-[1/1] bg-[#FFF9EF] overflow-hidden flex items-center justify-center">
-          <ImageWithFallback src={p.image} alt={p.name} />
+          <ImageWithFallback src={mainImg} alt={p.name} />
         </div>
       </Link>
       <div className="p-4 flex flex-col justify-between flex-grow">
-        <Link to={`/san-pham/${p.slug}`} className="block">
+        <Link to={`/san-pham/${p.id}`} className="block">
           <h3 className="font-semibold text-[#3F250C] group-hover:text-[#C8A951] text-[15px] leading-snug line-clamp-2">
             {p.name}
           </h3>
@@ -105,11 +148,11 @@ function ProductCard({ p }: { p: any }) {
         <div className="mt-3">
           <div className="flex items-baseline gap-2">
             <span className="text-[#B8860B] font-bold text-lg">
-              {VND.format(p.price)}₫
+              {VND.format(price)}₫
             </span>
-            {p.oldPrice && (
+            {oldPrice && oldPrice !== price && (
               <span className="text-gray-400 line-through text-sm">
-                {VND.format(p.oldPrice)}₫
+                {VND.format(oldPrice)}₫
               </span>
             )}
           </div>
@@ -128,10 +171,10 @@ function ProductRow({ title, subtitle, items, onShowMore, onShowFilter }: any) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: items.slice(0, 6).map((p: any, i: number) => ({
+    itemListElement: items.slice(0, 6).map((p: Product, i: number) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `/san-pham/${p.slug}`,
+      url: `/san-pham/${p.id}`,
       name: p.name,
     })),
   };
@@ -148,7 +191,9 @@ function ProductRow({ title, subtitle, items, onShowMore, onShowFilter }: any) {
           >
             🌿 {title}
           </h2>
-          <p className={`text-sm text-yellow-100/85 italic ${TITLE_SHADOW}`}>{subtitle}</p>
+          <p className={`text-sm text-yellow-100/85 italic ${TITLE_SHADOW}`}>
+            {subtitle}
+          </p>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -167,7 +212,7 @@ function ProductRow({ title, subtitle, items, onShowMore, onShowFilter }: any) {
       {/* Mobile/Tablet: kéo ngang */}
       <div className="lg:hidden overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex gap-4 snap-x snap-mandatory">
-          {items.slice(0, 6).map((p: any) => (
+          {items.slice(0, 6).map((p: Product) => (
             <div key={p.id} className="snap-start shrink-0 w-[240px]">
               <ProductCard p={p} />
             </div>
@@ -177,7 +222,7 @@ function ProductRow({ title, subtitle, items, onShowMore, onShowFilter }: any) {
 
       {/* Desktop: 1 hàng 6 cột */}
       <div className="hidden lg:grid gap-4 xl:gap-5 lg:grid-cols-6">
-        {items.slice(0, 6).map((p: any) => (
+        {items.slice(0, 6).map((p: Product) => (
           <ProductCard key={p.id} p={p} />
         ))}
       </div>
@@ -200,9 +245,59 @@ function ProductRow({ title, subtitle, items, onShowMore, onShowFilter }: any) {
 function SectionWithGrid({ title, subtitle, items }: any) {
   const [page, setPage] = useState(1);
   const [showFilter, setShowFilter] = useState(true);
+
+  // state filter
+  const [groupFilter, setGroupFilter] = useState<string[]>([]);
+  const [woodFilter, setWoodFilter] = useState<string[]>([]);
+  const [priceFilter, setPriceFilter] = useState<string[]>([]);
+
   const PAGE_SIZE = 20;
-  const totalPages = Math.ceil(items.length / PAGE_SIZE);
-  const list = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // reset page khi đổi filter
+  useEffect(() => {
+    setPage(1);
+  }, [groupFilter, woodFilter, priceFilter]);
+
+  // lọc client-side trên items (đã là subset của tất cả sản phẩm)
+  const filtered: Product[] = items.filter((p: Product) => {
+    const nameLower = p.name.toLowerCase();
+    const text = (p.name + " " + (p.description || "")).toLowerCase();
+    const price = p.salePrice ?? p.price ?? 0;
+
+    // Nhóm: Tam Đa / Di Lặc / Quan Âm
+    if (groupFilter.length > 0) {
+      const okGroup = groupFilter.some((g) =>
+        nameLower.includes(g.toLowerCase())
+      );
+      if (!okGroup) return false;
+    }
+
+    // Loại gỗ
+    if (woodFilter.length > 0) {
+      const okWood = woodFilter.some((w) => text.includes(w.toLowerCase()));
+      if (!okWood) return false;
+    }
+
+    // Giá
+    if (priceFilter.length > 0) {
+      let okPrice = false;
+      for (const pf of priceFilter) {
+        if (pf === "< 1 triệu" && price < 1_000_000) okPrice = true;
+        if (pf === "1 – 2 triệu" && price >= 1_000_000 && price <= 2_000_000)
+          okPrice = true;
+        if (pf === "> 2 triệu" && price > 2_000_000) okPrice = true;
+      }
+      if (!okPrice) return false;
+    }
+
+    return true;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const list: Product[] = filtered.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
 
   return (
     <>
@@ -214,7 +309,9 @@ function SectionWithGrid({ title, subtitle, items }: any) {
           🌿 {title}
         </h2>
         <div className="flex items-center gap-3">
-          <span className={`text-sm text-yellow-100/85 italic ${TITLE_SHADOW}`}>{subtitle}</span>
+          <span className={`text-sm text-yellow-100/85 italic ${TITLE_SHADOW}`}>
+            {subtitle}
+          </span>
           <button
             onClick={() => setShowFilter((s) => !s)}
             className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-[#C8A951] text-yellow-100 hover:bg-[#C8A951]/20 transition"
@@ -231,20 +328,39 @@ function SectionWithGrid({ title, subtitle, items }: any) {
             <h3 className="text-yellow-200 font-bold mb-3 flex items-center gap-1">
               <SlidersHorizontal size={16} /> Bộ lọc
             </h3>
-            <FilterGroup title="Nhóm" items={["Tam Đa", "Di Lặc", "Quan Âm"]} />
-            <FilterGroup title="Loại gỗ" items={["Hương Đá", "Hương Ta", "Mun Hoa", "Bách Xanh"]} />
-            <FilterGroup title="Giá" items={["< 1 triệu", "1 – 2 triệu", "> 2 triệu"]} />
-            <FilterGroup title="Vị trí" items={["Phòng khách", "Bàn thờ", "Cửa hàng", "Kệ tủ"]} />
+            <FilterGroup
+              title="Nhóm"
+              items={["Tam Đa", "Di Lặc", "Quan Âm"]}
+              selected={groupFilter}
+              onChange={setGroupFilter}
+            />
+            <FilterGroup
+              title="Loại gỗ"
+              items={["Hương Đá", "Hương Ta", "Mun Hoa", "Bách Xanh"]}
+              selected={woodFilter}
+              onChange={setWoodFilter}
+            />
+            <FilterGroup
+              title="Giá"
+              items={["< 1 triệu", "1 – 2 triệu", "> 2 triệu"]}
+              selected={priceFilter}
+              onChange={setPriceFilter}
+            />
           </aside>
         )}
 
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 xl:gap-6">
-            {list.map((p: any) => (
+            {list.map((p: Product) => (
               <ProductCard key={p.id} p={p} />
             ))}
           </div>
           <div className="mt-8 flex flex-col items-center gap-4">
+            {filtered.length === 0 && (
+              <p className="text-yellow-100 text-sm">
+                Không tìm thấy sản phẩm phù hợp bộ lọc.
+              </p>
+            )}
             {totalPages > 1 && (
               <Pagination page={page} setPage={setPage} totalPages={totalPages} />
             )}
@@ -256,7 +372,15 @@ function SectionWithGrid({ title, subtitle, items }: any) {
 }
 
 /* ============ SECTION (Tự động chuyển chế độ) ============ */
-function ProductSection({ title, subtitle, items }: any) {
+function ProductSection({
+  title,
+  subtitle,
+  items,
+}: {
+  title: string;
+  subtitle: string;
+  items: Product[];
+}) {
   const [expanded, setExpanded] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -297,36 +421,80 @@ function ProductSection({ title, subtitle, items }: any) {
 
 /* ============ PAGE ============ */
 export default function AllFeaturedSections() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error("Không thể tải sản phẩm");
+        const data: Product[] = await res.json();
+        setProducts(data);
+      } catch (e: any) {
+        setError(e.message || "Lỗi không xác định");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const WOOD_BG =
     "bg-[url('/images/wood.jpg')] bg-repeat bg-[length:512px_auto] bg-top bg-fixed";
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen ${WOOD_BG} flex items-center justify-center`}>
+        <p className="text-yellow-100">Đang tải sản phẩm...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`min-h-screen ${WOOD_BG} flex items-center justify-center`}>
+        <p className="text-red-300">Lỗi: {error}</p>
+      </div>
+    );
+  }
+
+  // Các section tạm filter client-side trên data API
+  const khuyenMai = products.slice(0, 18);
+  const duocMuaNhieu = products.slice(4, 40);
+  const doGoPhongThuy = products.filter((p) => {
+    const name = p.name.toLowerCase();
+    return name.includes("tượng") || name.includes("vòng") || name.includes("gỗ");
+  });
+  const ruouTruyenThong = products.filter((p) =>
+    p.name.toLowerCase().includes("rượu")
+  );
 
   return (
     <div className={`min-h-screen ${WOOD_BG}`}>
       <ProductSection
         title="🔥 Khuyến mãi đặc biệt"
         subtitle="Giảm giá hấp dẫn cho các sản phẩm được yêu thích"
-        items={PRODUCTS.slice(0, 18)}
+        items={khuyenMai}
       />
       <ProductSection
         title="💛 Được mua nhiều"
         subtitle="Những sản phẩm khách hàng lựa chọn nhiều nhất"
-        items={PRODUCTS.slice(4, 40)}
+        items={duocMuaNhieu}
       />
       <ProductSection
         title="🪵 Đồ gỗ phong thủy"
         subtitle="Tượng và vật phẩm gỗ tự nhiên mang năng lượng an lành"
-        items={PRODUCTS.filter(
-          (p: any) =>
-            p.name.toLowerCase().includes("tượng") ||
-            p.name.toLowerCase().includes("vòng")
-        )}
+        items={doGoPhongThuy}
       />
       <ProductSection
         title="🍶 Rượu truyền thống Việt"
         subtitle="Rượu ngâm thảo mộc – tinh hoa văn hoá Việt"
-        items={PRODUCTS.filter((p: any) =>
-          p.name.toLowerCase().includes("rượu")
-        )}
+        items={ruouTruyenThong}
       />
     </div>
   );
