@@ -94,18 +94,23 @@ public class SecurityConfig {
 
     // CORS cho phép FE call sang BE
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*")); // hoặc chỉ định domain FE cho an toàn
-        config.setAllowedOrigins(List.of("https://kiemphongkimproject.vercel.app"));
-        config.setAllowedOrigins(List.of("https://kiemphongkimproject.onrender.com"));
-        config.setAllowCredentials(true);
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
+CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+    // Cho phép FE ở Vercel + localhost dev
+    config.setAllowedOrigins(List.of(
+            "https://kiemphongkimproject.vercel.app",
+            "http://localhost:5173",
+            "http://localhost:3000"
+    ));
+
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true); // nếu sau này dùng cookie; nếu chỉ dùng Bearer token thì để false cũng được
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
+}
+
 }
