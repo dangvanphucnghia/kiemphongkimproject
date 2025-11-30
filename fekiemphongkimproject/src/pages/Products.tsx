@@ -6,7 +6,7 @@ import type { Product } from "../data/products";
 import { ph } from "../data/products";
 
 /* ===== CẤU HÌNH ẢNH TỪ BE ===== */
-const API_BASE = import.meta.env.VITE_API_URL ?? ""; // vd: https://kiemphongkimproject.onrender.com
+const API_BASE = import.meta.env.VITE_API_URL ?? "https://kiemphongkimproject.onrender.com"; // vd: https://kiemphongkimproject.onrender.com
 
 function resolveImageUrl(src?: string, nameForPh?: string) {
   const fallback = ph(nameForPh || "Kiem+Phong+Kim");
