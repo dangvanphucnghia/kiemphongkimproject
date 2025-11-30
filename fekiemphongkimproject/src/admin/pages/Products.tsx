@@ -101,17 +101,28 @@ export default function Products() {
   const [existingUrls, setExistingUrls] = useState<string[]>([]);
 
   // ===== LOAD LIST =====
-  async function loadProducts() {
-    try {
-      setLoading(true);
-      const data = await apiRequest<ProductDto[]>("/api/products");
-      setItems(data);
-    } catch (e: any) {
-      alert(e?.message ?? "Không tải được danh sách sản phẩm");
-    } finally {
-      setLoading(false);
+async function loadProducts() {
+  try {
+    setLoading(true);
+    const data = await apiRequest<any>("/api/products");
+
+    console.log("API /api/products trả về:", data);
+
+    if (!Array.isArray(data)) {
+      throw new Error(
+        data?.message || "Dữ liệu /api/products không phải là mảng"
+      );
     }
+
+    setItems(data as ProductDto[]);
+  } catch (e: any) {
+    console.error(e);
+    alert(e?.message ?? "Không tải được danh sách sản phẩm");
+  } finally {
+    setLoading(false);
   }
+}
+
 
   useEffect(() => {
     loadProducts();
