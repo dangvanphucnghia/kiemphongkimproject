@@ -98,6 +98,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("*")); // hoặc chỉ định domain FE cho an toàn
         config.setAllowedOrigins(List.of("https://kiemphongkimproject.vercel.app"));
+        config.setAllowedOrigins(List.of("https://kiemphongkimproject.onrender.com"));
         config.setAllowCredentials(true);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
