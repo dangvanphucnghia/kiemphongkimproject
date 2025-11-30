@@ -31,20 +31,29 @@ function initials(name: string) {
 }
 function tierColor(tier: string) {
   switch (tier) {
-    case "Platinum": return "bg-gradient-to-r from-slate-800 to-slate-600 text-white";
-    case "Gold": return "bg-gradient-to-r from-amber-500 to-amber-400 text-white";
-    default: return "bg-gradient-to-r from-gray-300 to-gray-200 text-gray-800";
+    case "Platinum":
+      return "bg-gradient-to-r from-slate-800 to-slate-600 text-white";
+    case "Gold":
+      return "bg-gradient-to-r from-amber-500 to-amber-400 text-white";
+    default:
+      return "bg-gradient-to-r from-gray-300 to-gray-200 text-gray-800";
   }
 }
+
+// nền vân gỗ
+const WOOD_BG =
+  "bg-[url('/images/wood.jpg')] bg-repeat bg-[length:512px_auto] bg-top";
 
 export default function Member() {
   const progress = Math.min((user.points / user.nextTierAt) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    // dùng nền vân gỗ thay cho gradient trắng
+    <div className={`min-h-screen ${WOOD_BG}`}>
       {/* Hero */}
       <section className="relative">
-        <div className="absolute inset-0 -z-10 h-48 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+        {/* dải gradient phía trên để chữ dễ đọc trên nền gỗ */}
+        <div className="absolute inset-0 -z-10 h-48 bg-gradient-to-r from-indigo-500/80 via-purple-500/80 to-pink-500/80" />
         <div className="max-w-6xl mx-auto px-4 pt-8 pb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -57,23 +66,48 @@ export default function Member() {
               </div>
             </div>
 
-            <div className={`px-3 py-1.5 rounded-xl text-sm shadow ${tierColor(user.tier)}`}>
+            <div
+              className={`px-3 py-1.5 rounded-xl text-sm shadow ${tierColor(
+                user.tier
+              )}`}
+            >
               Hạng: <span className="font-semibold">{user.tier}</span>
             </div>
           </div>
 
           {/* Stats cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-            <StatCard label="Điểm hiện tại" value={user.points.toLocaleString()} hint={`Cần ${user.nextTierAt - user.points} điểm để lên ${user.nextTier}`} />
-            <StatCard label="Đơn gần đây" value={recentOrders.length} hint="Trong 60 ngày" />
-            <StatCard label="Ưu đãi khả dụng" value={benefits.length} hint="Cập nhật mỗi tuần" />
+            <StatCard
+              label="Điểm hiện tại"
+              value={user.points.toLocaleString()}
+              hint={`Cần ${user.nextTierAt - user.points} điểm để lên ${
+                user.nextTier
+              }`}
+            />
+            <StatCard
+              label="Đơn gần đây"
+              value={recentOrders.length}
+              hint="Trong 60 ngày"
+            />
+            <StatCard
+              label="Ưu đãi khả dụng"
+              value={benefits.length}
+              hint="Cập nhật mỗi tuần"
+            />
           </div>
 
           {/* Progress */}
           <div className="mt-6 p-4 rounded-2xl bg-white shadow-sm border">
             <div className="flex items-center justify-between mb-2">
-              <div className="font-medium">Tiến độ lên hạng <span className="text-gray-500">({user.tier} → {user.nextTier})</span></div>
-              <div className="text-sm text-gray-500">{Math.floor(progress)}%</div>
+              <div className="font-medium">
+                Tiến độ lên hạng{" "}
+                <span className="text-gray-500">
+                  ({user.tier} → {user.nextTier})
+                </span>
+              </div>
+              <div className="text-sm text-gray-500">
+                {Math.floor(progress)}%
+              </div>
             </div>
             <div className="h-2.5 w-full rounded-full bg-gray-100 overflow-hidden">
               <div
@@ -86,15 +120,28 @@ export default function Member() {
               />
             </div>
             <div className="mt-2 text-xs text-gray-500">
-              {user.points.toLocaleString()} / {user.nextTierAt.toLocaleString()} điểm
+              {user.points.toLocaleString()} /{" "}
+              {user.nextTierAt.toLocaleString()} điểm
             </div>
           </div>
 
           {/* Quick actions */}
           <div className="mt-4 flex flex-wrap gap-3">
-            <Btn onClick={() => alert("Đi đổi voucher (demo)")}>Đổi voucher</Btn>
-            <Btn variant="outline" onClick={() => alert("Cập nhật hồ sơ (demo)")}>Cập nhật hồ sơ</Btn>
-            <Btn variant="ghost" onClick={() => alert("Xem lịch sử điểm (demo)")}>Lịch sử điểm</Btn>
+            <Btn onClick={() => alert("Đi đổi voucher (demo)")}>
+              Đổi voucher
+            </Btn>
+            <Btn
+              variant="outline"
+              onClick={() => alert("Cập nhật hồ sơ (demo)")}
+            >
+              Cập nhật hồ sơ
+            </Btn>
+            <Btn
+              variant="ghost"
+              onClick={() => alert("Xem lịch sử điểm (demo)")}
+            >
+              Lịch sử điểm
+            </Btn>
           </div>
         </div>
       </section>
@@ -103,7 +150,10 @@ export default function Member() {
       <main className="max-w-6xl mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
           {/* Benefits */}
-          <Card title="Ưu đãi dành cho bạn" subtitle="Chỉ áp dụng cho hạng hiện tại">
+          <Card
+            title="Ưu đãi dành cho bạn"
+            subtitle="Chỉ áp dụng cho hạng hiện tại"
+          >
             <ul className="space-y-3">
               {benefits.map((b, i) => (
                 <li key={i} className="flex items-start gap-3">
@@ -116,12 +166,18 @@ export default function Member() {
               ))}
             </ul>
             <div className="mt-4">
-              <Btn onClick={() => alert("Xem tất cả ưu đãi (demo)")}>Xem tất cả ưu đãi</Btn>
+              <Btn onClick={() => alert("Xem tất cả ưu đãi (demo)")}>
+                Xem tất cả ưu đãi
+              </Btn>
             </div>
           </Card>
 
           {/* Orders */}
-          <Card className="lg:col-span-2" title="Đơn hàng gần đây" subtitle="Theo dõi trạng thái và chi tiết">
+          <Card
+            className="lg:col-span-2"
+            title="Đơn hàng gần đây"
+            subtitle="Theo dõi trạng thái và chi tiết"
+          >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -140,19 +196,31 @@ export default function Member() {
                       <td>
                         <span className={badgeClass(o.status)}>{o.status}</span>
                       </td>
-                      <td className="text-right font-medium">{formatCurrency(o.total)}</td>
+                      <td className="text-right font-medium">
+                        {formatCurrency(o.total)}
+                      </td>
                     </tr>
                   ))}
                   {recentOrders.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="py-6 text-center text-gray-500">Chưa có đơn hàng</td>
+                      <td
+                        colSpan={4}
+                        className="py-6 text-center text-gray-500"
+                      >
+                        Chưa có đơn hàng
+                      </td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
             <div className="mt-4">
-              <Btn variant="outline" onClick={() => alert("Xem lịch sử đơn hàng (demo)")}>Xem lịch sử đơn</Btn>
+              <Btn
+                variant="outline"
+                onClick={() => alert("Xem lịch sử đơn hàng (demo)")}
+              >
+                Xem lịch sử đơn
+              </Btn>
             </div>
           </Card>
 
@@ -165,8 +233,15 @@ export default function Member() {
               <Row label="Điểm" value={user.points.toLocaleString()} />
             </div>
             <div className="mt-4 flex gap-2">
-              <Btn onClick={() => alert("Chỉnh sửa hồ sơ (demo)")}>Chỉnh sửa</Btn>
-              <Btn variant="ghost" onClick={() => alert("Bảo mật tài khoản (demo)")}>Bảo mật</Btn>
+              <Btn onClick={() => alert("Chỉnh sửa hồ sơ (demo)")}>
+                Chỉnh sửa
+              </Btn>
+              <Btn
+                variant="ghost"
+                onClick={() => alert("Bảo mật tài khoản (demo)")}
+              >
+                Bảo mật
+              </Btn>
             </div>
           </Card>
         </div>
@@ -176,7 +251,15 @@ export default function Member() {
 }
 
 // ======= UI primitives =======
-function StatCard({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) {
+function StatCard({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: React.ReactNode;
+  hint?: string;
+}) {
   return (
     <div className="rounded-2xl bg-white border shadow-sm p-4">
       <div className="text-sm text-gray-500">{label}</div>
@@ -191,9 +274,15 @@ function Card({
   subtitle,
   children,
   className = "",
-}: React.PropsWithChildren<{ title: string; subtitle?: string; className?: string }>) {
+}: React.PropsWithChildren<{
+  title: string;
+  subtitle?: string;
+  className?: string;
+}>) {
   return (
-    <section className={`rounded-2xl bg-white border shadow-sm p-4 ${className}`}>
+    <section
+      className={`rounded-2xl bg-white border shadow-sm p-4 ${className}`}
+    >
       <div className="mb-4">
         <h2 className="text-lg font-semibold">{title}</h2>
         {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
@@ -216,8 +305,12 @@ function Btn({
   children,
   onClick,
   variant = "solid",
-}: React.PropsWithChildren<{ onClick?: () => void; variant?: "solid" | "outline" | "ghost" }>) {
-  const base = "inline-flex items-center gap-2 rounded-xl text-sm px-3 py-2 transition";
+}: React.PropsWithChildren<{
+  onClick?: () => void;
+  variant?: "solid" | "outline" | "ghost";
+}>) {
+  const base =
+    "inline-flex items-center gap-2 rounded-xl text-sm px-3 py-2 transition";
   if (variant === "outline") {
     return (
       <button onClick={onClick} className={`${base} border hover:bg-gray-50`}>
@@ -233,7 +326,10 @@ function Btn({
     );
   }
   return (
-    <button onClick={onClick} className={`${base} text-white bg-gray-900 hover:bg-black`}>
+    <button
+      onClick={onClick}
+      className={`${base} text-white bg-gray-900 hover:bg-black`}
+    >
       {children}
     </button>
   );
@@ -252,7 +348,13 @@ function badgeClass(status: string) {
 
 function IconCheck() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0 mt-0.5" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      className="shrink-0 mt-0.5"
+      aria-hidden="true"
+    >
       <path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
     </svg>
   );
