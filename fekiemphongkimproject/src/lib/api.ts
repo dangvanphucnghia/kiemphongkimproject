@@ -1,5 +1,5 @@
 // src/lib/api.ts
-const API = import.meta.env.VITE_API_URL ?? ""; // để trống vì đã proxy '/api'
+const API = import.meta.env.VITE_API_URL ?? "https://kiemphongkimproject.onrender.com"; // để trống vì đã proxy '/api'
 
 export type RegisterDto = {
   username: string;
