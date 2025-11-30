@@ -72,7 +72,7 @@ export default function SubBar() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:1212/api/categories");
+        const res = await fetch("https://kiemphongkimproject.onrender.com/api/categories");
         if (!res.ok) {
           console.error("Failed to fetch categories", res.status);
           return;

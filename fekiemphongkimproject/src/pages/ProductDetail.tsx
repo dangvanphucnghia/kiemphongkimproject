@@ -7,8 +7,8 @@ import type { Product } from "../data/products";
 import { ph } from "../data/products";
 
 // Base URL của backend – nếu chưa set VITE_API_URL
-// thì mặc định dùng http://localhost:1212 (port BE của bạn)
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:1212";
+// thì mặc định dùng https://kiemphongkimproject.onrender.com (port BE của bạn)
+const API_BASE = import.meta.env.VITE_API_URL || "https://kiemphongkimproject.onrender.com";
 
 // Helper build URL ảnh
 function resolveImageUrl(src?: string, nameForPh?: string) {

@@ -7,7 +7,7 @@ import { authHeader } from "../../lib/api";
 
 /**
  * Cấu hình BE trong .env hoặc .env.local:
- * VITE_API_URL=http://localhost:1212
+ * VITE_API_URL=https://kiemphongkimproject.onrender.com
  */
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
 

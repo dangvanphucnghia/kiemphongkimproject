@@ -6,7 +6,7 @@ import type { Product } from "../data/products";
 import { ph } from "../data/products";
 
 /* ==== BASE URL backend để build URL ảnh ==== */
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:1212";
+const API_BASE = import.meta.env.VITE_API_URL || "https://kiemphongkimproject.onrender.com";
 
 function resolveImageUrl(src?: string, nameForPh?: string) {
   if (!src) return ph(nameForPh || "Kiem+Phong+Kim");
@@ -123,7 +123,7 @@ function ProductCard({ p }: { p: Product }) {
       ? Math.round(((oldPrice - price) / oldPrice) * 100)
       : 0;
 
-  // DÙNG HÀM RESOLVE ĐỂ ĐỔI /uploads/... → http://localhost:1212/uploads/...
+  // DÙNG HÀM RESOLVE ĐỂ ĐỔI /uploads/... → https://kiemphongkimproject.onrender.com/uploads/...
   const mainImg = resolveImageUrl(p.imageUrls?.[0], p.name);
 
   return (

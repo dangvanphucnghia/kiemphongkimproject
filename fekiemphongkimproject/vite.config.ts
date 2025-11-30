@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:1212',
+        target: 'https://kiemphongkimproject.onrender.com',
         changeOrigin: true,
       },
     },
