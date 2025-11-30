@@ -230,7 +230,7 @@ async function loadProducts() {
     }
 
     const isEdit = !!form.id;
-    const url = isEdit ? `/api/products/${form.id}` : "/api/products";
+    const url = isEdit ? `${API_BASE}/api/products/${form.id}` : "${API_BASE}/api/products";
 
     // BẮT BUỘC chọn ít nhất 1 ảnh khi TẠO MỚI
     if (!isEdit && images.length === 0) {
@@ -295,7 +295,7 @@ async function loadProducts() {
     if (!confirm("Xoá sản phẩm này?")) return;
 
     try {
-      await apiRequest<void>(`/api/products/${id}`, {
+      await apiRequest<void>(`${API_BASE}/api/products/${id}`, {
         method: "DELETE",
       });
       setItems((prev) => prev.filter((p) => p.id !== id));
