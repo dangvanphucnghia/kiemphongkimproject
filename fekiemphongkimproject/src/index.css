@@ -1,6 +1,8 @@
 /* Tailwind v4 */
 @import "tailwindcss";
+@import "./styles/megamenu.css";
 
+/* Your other styles */
 /* Khai báo token theme ngay trong CSS (KHÔNG cần tailwind.config.js) */
 @theme {
   /* Màu chủ đạo */

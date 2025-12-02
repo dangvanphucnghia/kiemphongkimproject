@@ -1,35 +1,38 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Menu } from "lucide-react";
 import MegaMenu from "./MegaMenu";
 
-/** ===== Types local ===== */
-export type MenuNode = { label: string; href: string; children?: MenuNode[] };
-export type MenuItem = { key: string; label: string; href?: string; items?: MenuNode[] };
+export type MenuNode = { 
+  label: string; 
+  href: string; 
+  children?: MenuNode[];
+  categoryId?: number;
+};
 
-/** ===== Data ===== */
-const BRAND = { phone: "039 573 2017" };
-const HOTLINES: string[] = ["0968 809 609", "0931 919 114", "0931 999 114"];
+export type MenuItem = { 
+  key: string; 
+  label: string; 
+  href?: string; 
+  items?: MenuNode[];
+  categoryId?: number;
+};
 
-/** MENU ===== */
-/** Dto từ API */
 type Category = {
   id: number;
   name: string;
   parentId: number | null;
 };
 
-/** Tạo slug đơn giản từ name để làm href (tạm thời) */
 const slugify = (name: string) =>
   name
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu tiếng Việt
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-");
 
-/** Build MenuItem[] từ list category phẳng */
 function buildMenuFromCategories(categories: Category[]): MenuItem[] {
-  // group theo parentId
   const byParent = new Map<number | null, Category[]>();
   categories.forEach((c) => {
     const key = c.parentId;
@@ -38,41 +41,36 @@ function buildMenuFromCategories(categories: Category[]): MenuItem[] {
     byParent.set(key, list);
   });
 
-  // đệ quy build children
   const buildNodes = (parentId: number | null): MenuNode[] => {
     const list = byParent.get(parentId) ?? [];
     return list.map((cat) => ({
       label: cat.name,
       href: `/danh-muc/${cat.id}-${slugify(cat.name)}`,
+      categoryId: cat.id,
       children: buildNodes(cat.id),
     }));
   };
 
-  // top-level (parentId = null) là các mục chính trong subbar
   const roots = byParent.get(null) ?? [];
   return roots.map((root) => ({
     key: String(root.id),
     label: root.name,
     href: `/danh-muc/${root.id}-${slugify(root.name)}`,
+    categoryId: root.id,
     items: buildNodes(root.id),
   }));
 }
 
-
-/* ====================================================================== */
-/* ====================== COMPONENT KHÔNG ĐỔI ============================ */
-/* ====================================================================== */
-
 export default function SubBar() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 gọi API categories 1 lần khi mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("https://kiemphongkimproject.onrender.com/api/categories");
+        const res = await fetch("/api/categories");
         if (!res.ok) {
           console.error("Failed to fetch categories", res.status);
           return;
@@ -88,7 +86,6 @@ export default function SubBar() {
     fetchCategories();
   }, []);
 
-  // đóng menu khi click ra ngoài / bấm ESC
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
@@ -96,7 +93,10 @@ export default function SubBar() {
       }
     };
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenKey(null);
+      if (e.key === "Escape") {
+        setOpenKey(null);
+        setMobileMenuOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEsc);
@@ -107,12 +107,13 @@ export default function SubBar() {
   }, []);
 
   return (
-    <header className="relative z-[1200] isolate border-b bg-wood" ref={wrapRef}>
-      <nav className="bg-transparent">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="my-3 rounded-lg bg-white border border-neutral-100 shadow-[0_4px_14px_rgba(0,0,0,0.12)] relative z-[1210]">
-            <div className="relative overflow-y-visible overflow-x-auto lg:overflow-x-visible no-scrollbar overflow-visible">
-              <ul className="flex items-center h-9 gap-3 px-3 min-w-max">
+    <header className="relative z-40 bg-white border-b" ref={wrapRef}>
+      <nav className="bg-white">
+        <div className="max-w-[1440px] mx-auto px-4">
+          <div className="flex items-center justify-between py-3">
+            {/* Desktop Menu */}
+            <div className="hidden lg:flex items-center gap-1 flex-1 overflow-x-auto scrollbar-hide">
+              <ul className="flex items-center gap-1">
                 {menu.map((item) => (
                   <NavItem
                     key={item.key}
@@ -124,17 +125,46 @@ export default function SubBar() {
                 ))}
               </ul>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <Menu className="w-5 h-5" />
+              <span className="font-medium">Danh mục sản phẩm</span>
+            </button>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden border-t bg-white py-2">
+              {menu.map((item) => (
+                <MobileMenuItem
+                  key={item.key}
+                  item={item}
+                  onClose={() => setMobileMenuOpen(false)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </nav>
     </header>
   );
 }
 
-
 function NavItem({
-  item, isOpen, onOpen, onClose,
-}: { item: MenuItem; isOpen: boolean; onOpen: () => void; onClose: () => void; }) {
+  item,
+  isOpen,
+  onOpen,
+  onClose,
+}: {
+  item: MenuItem;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}) {
   const hasChild = !!item.items?.length;
 
   return (
@@ -142,28 +172,28 @@ function NavItem({
       className="relative"
       onMouseEnter={onOpen}
       onMouseLeave={onClose}
-      onFocus={onOpen}
-      onBlur={onClose}
     >
       <a
         href={item.href || "#"}
-        className={[
-          "inline-flex items-center gap-1 whitespace-nowrap",
-          "uppercase text-[8px] md:text-[8.5px] font-semibold leading-none",
-          "px-2 py-1.5 rounded-md transition-colors",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]",
-          isOpen
-            ? "text-[#D4AF37] bg-[#FFF6DE] border-b-2 border-[#D4AF37]"
-            : "text-neutral-800 hover:text-[#D4AF37] hover:bg-neutral-50"
-        ].join(" ")}
+        className={`
+          inline-flex items-center gap-2 whitespace-nowrap
+          text-sm font-medium leading-none
+          px-4 py-2.5 rounded-lg transition-all duration-200
+          ${isOpen
+            ? "text-blue-600 bg-blue-50 shadow-sm"
+            : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+          }
+        `}
         aria-haspopup={hasChild ? "true" : undefined}
         aria-expanded={isOpen ? "true" : "false"}
       >
         <span>{item.label}</span>
         {hasChild && (
-          <svg viewBox="0 0 24 24" className="h-3 w-3 -mb-px">
-            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <ChevronDown 
+            className={`w-4 h-4 transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
         )}
       </a>
 
@@ -171,5 +201,57 @@ function NavItem({
         <MegaMenu items={item.items!} onClose={onClose} />
       )}
     </li>
+  );
+}
+
+function MobileMenuItem({
+  item,
+  onClose,
+}: {
+  item: MenuItem;
+  onClose: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const hasChild = !!item.items?.length;
+
+  return (
+    <div className="border-b last:border-0">
+      <div className="flex items-center justify-between px-4 py-3">
+        <a
+          href={item.href || "#"}
+          onClick={onClose}
+          className="flex-1 font-medium text-gray-700 hover:text-blue-600"
+        >
+          {item.label}
+        </a>
+        {hasChild && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="p-2 hover:bg-gray-100 rounded"
+          >
+            <ChevronDown
+              className={`w-4 h-4 transition-transform ${
+                expanded ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        )}
+      </div>
+
+      {expanded && hasChild && (
+        <div className="pl-4 pb-2">
+          {item.items!.map((child, idx) => (
+            <a
+              key={idx}
+              href={child.href}
+              onClick={onClose}
+              className="block px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded"
+            >
+              {child.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
