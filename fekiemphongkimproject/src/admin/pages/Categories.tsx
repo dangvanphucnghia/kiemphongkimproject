@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Table from '../components/Table';
 import Modal from '../components/Modal';
 import { apiRequest } from '../../api/http';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 type Category = {
   id: number;
@@ -30,7 +31,7 @@ export default function Categories() {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiRequest<Category[]>('/api/categories');
+      const data = await apiRequest<Category[]>('${API_BASE}/api/categories');
       setItems(data);
     } catch (e: any) {
       setError(e.message || 'Không tải được loại sản phẩm');
@@ -65,7 +66,7 @@ export default function Categories() {
     if (!c) return;
     if (!window.confirm(`Xóa loại "${c.name}" ?`)) return;
     try {
-      await apiRequest<void>(`/api/categories/${c.id}`, { method: 'DELETE' });
+      await apiRequest<void>(`${API_BASE}/api/categories/${c.id}`, { method: 'DELETE' });
       setItems((prev) => prev.filter((x) => x.id !== c.id));
     } catch (e: any) {
       alert(e.message || 'Xóa loại sản phẩm thất bại');
@@ -80,14 +81,14 @@ export default function Categories() {
       }
 
       if (editingIndex == null) {
-        const created = await apiRequest<Category>('/api/categories', {
+        const created = await apiRequest<Category>('${API_BASE}/api/categories', {
           method: 'POST',
           body: JSON.stringify(form),
         });
         setItems((prev) => [...prev, created]);
       } else {
         const id = items[editingIndex].id;
-        await apiRequest<void>(`/api/categories/${id}`, {
+        await apiRequest<void>(`${API_BASE}/api/categories/${id}`, {
           method: 'PUT',
           body: JSON.stringify(form),
         });

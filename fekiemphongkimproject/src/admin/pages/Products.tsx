@@ -104,7 +104,7 @@ export default function Products() {
 async function loadProducts() {
   try {
     setLoading(true);
-    const data = await apiRequest<any>("/api/products");
+    const data = await apiRequest<any>("${API_BASE}/api/products");
 
     console.log("API /api/products trả về:", data);
 

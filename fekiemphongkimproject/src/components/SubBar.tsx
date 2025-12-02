@@ -70,7 +70,7 @@ export default function SubBar() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("${API_BASE}/api/categories");
         if (!res.ok) {
           console.error("Failed to fetch categories", res.status);
           return;

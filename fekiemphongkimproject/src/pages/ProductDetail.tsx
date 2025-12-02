@@ -134,7 +134,7 @@ export default function ProductDetail() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`/api/products/${numericId}`);
+        const res = await fetch(`${API_BASE}/api/products/${numericId}`);
         if (res.status === 404) {
           throw new Error("Sản phẩm không tồn tại hoặc đã bị xoá.");
         }

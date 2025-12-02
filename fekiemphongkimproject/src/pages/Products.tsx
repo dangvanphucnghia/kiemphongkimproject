@@ -60,8 +60,8 @@ export default function ProductsPage() {
 
         // NẾU CÓ categoryId => gọi API lọc theo category
         const url = categoryId
-          ? `/api/products/category/${categoryId}`
-          : `/api/products`;
+          ? `${API_BASE}/api/products/category/${categoryId}`
+          : `${API_BASE}/api/products`;
 
         const res = await fetch(url);
         if (!res.ok) throw new Error("Không tải được danh sách sản phẩm");
