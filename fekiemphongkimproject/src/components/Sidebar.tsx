@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Home,
-  Package,
-  Sparkles,
-  Gift,
-  Users,
-  Phone,
-  Tag,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import { Package, ChevronDown, ChevronRight } from "lucide-react";
 
 type Category = {
   id: number;
@@ -25,6 +15,7 @@ type MenuNode = {
   children: MenuNode[];
 };
 
+// Convert name → SEO slug
 const slugify = (name: string) =>
   name
     .normalize("NFD")
@@ -34,6 +25,7 @@ const slugify = (name: string) =>
     .trim()
     .replace(/\s+/g, "-");
 
+// Convert list → cây menu
 function buildTree(categories: Category[]): MenuNode[] {
   const byParent = new Map<number | null, Category[]>();
   categories.forEach((c) => {
@@ -62,26 +54,38 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("${API_BASE}/api/categories");
-        if (!res.ok) return;
+        const API_BASE = import.meta.env.VITE_API_URL;
+
+        if (!API_BASE) {
+          console.error("❌ Missing VITE_API_URL in environment!");
+          return;
+        }
+
+        const url = `${API_BASE}/api/categories`;
+        console.log("👉 Fetching categories from:", url);
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          console.error("❌ API error:", res.status);
+          return;
+        }
+
         const data: Category[] = await res.json();
         const tree = buildTree(data);
         setMenu(tree);
       } catch (err) {
-        console.error("Error loading categories", err);
+        console.error("❌ Error loading categories", err);
       }
     };
+
     fetchCategories();
   }, []);
 
   const toggleExpand = (id: number) => {
     setExpanded((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   };
@@ -96,22 +100,29 @@ export default function Sidebar() {
         </h2>
       </div>
 
-      {/* Menu dọc */}
+      {/* Menu */}
       <nav className="p-2 max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin">
-        {menu.map((item) => (
-          <MenuItem
-            key={item.id}
-            item={item}
-            level={0}
-            expanded={expanded}
-            onToggle={toggleExpand}
-          />
-        ))}
+        {menu.length === 0 ? (
+          <p className="text-gray-500 text-sm px-3 py-4">
+            Không có danh mục hoặc lỗi tải dữ liệu.
+          </p>
+        ) : (
+          menu.map((item) => (
+            <MenuItem
+              key={item.id}
+              item={item}
+              level={0}
+              expanded={expanded}
+              onToggle={toggleExpand}
+            />
+          ))
+        )}
       </nav>
     </aside>
   );
 }
 
+// Recursive Menu Item
 function MenuItem({
   item,
   level,
@@ -176,7 +187,7 @@ function MenuItem({
         )}
       </div>
 
-      {/* Children - Recursive */}
+      {/* Children */}
       {hasChildren && isExpanded && (
         <div className="mt-1 ml-2 border-l-2 border-gray-100">
           {item.children.map((child) => (
