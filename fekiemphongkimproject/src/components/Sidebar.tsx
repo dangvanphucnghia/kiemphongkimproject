@@ -62,7 +62,7 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("${API_BASE}/api/categories");
         if (!res.ok) return;
         const data: Category[] = await res.json();
         const tree = buildTree(data);

@@ -12,7 +12,7 @@ type CurrentUser = {
 const navItem = (to: string, label: string) => (
   <NavLink
     to={to}
-    end={to === "/admin"}
+    end={to === "${API_BASE}/admin"}
     className={({ isActive }) =>
       "block rounded-lg border px-3 py-2 text-slate-200 transition " +
       (isActive
