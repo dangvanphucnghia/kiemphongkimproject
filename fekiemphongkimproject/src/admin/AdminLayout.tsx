@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../lib/api";
-
+const API_BASE = import.meta.env.VITE_API_URL;
 type CurrentUser = {
   username?: string;
   fullName?: string;
